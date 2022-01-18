@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.Application;
+import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
 
+@ViewScoped
 @ManagedBean
 public class UsuarioBean {
 
@@ -16,9 +22,12 @@ public class UsuarioBean {
 	GenericDAO<Usuario> daousuario = new GenericDAO<Usuario>();
 	List<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	
-	public String salvar(Usuario u) {
-		daousuario.salvar(u);
-		return null;
+	public String salvar() {
+		daousuario.salvar(usuario);
+		usuario = new Usuario();
+//		refresh(); /* quando usar primefaces*/
+		listar();
+		return "";
 	}
 	
 	public void buscar() {
@@ -50,5 +59,15 @@ public class UsuarioBean {
 		this.listaUsuarios = listaUsuarios;
 	}
 	
+	// chamar esse método para atualizar datatable do primefaces
+	@SuppressWarnings("unused")
+	private void refresh() {  
+        FacesContext context = FacesContext.getCurrentInstance();  
+        Application application = context.getApplication();  
+        ViewHandler viewHandler = application.getViewHandler();  
+        UIViewRoot viewRoot = viewHandler.createView(context, context.getViewRoot().getViewId());  
+        context.setViewRoot(viewRoot);  
+        context.renderResponse();  
+    } 
 	
 }

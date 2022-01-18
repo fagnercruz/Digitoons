@@ -15,18 +15,19 @@
 		
 		<h:panelGrid columns="2">
 			<h:outputLabel value="usuario" for="campoUsuario" />
-			<p:inputText id="campoUsuario" value="#{loginBean.login.username}" />
+			<h:inputText id="campoUsuario" value="#{loginBean.login.username}" />
 
 			<h:outputLabel value="senha" for="campoSenha" />
-			<p:password id="campoSenha" value="#{loginBean.login.password}" />
+			<h:inputSecret id="campoSenha" value="#{loginBean.login.password}" />
 
 			<h:outputLabel />
 			<h:panelGroup>
-				<h:commandButton value="Entrar" action="#{loginBean.logar}" />
-				<h:commandButton value="Limpar" type="reset" />
+				<h:commandButton value="Entrar" action="#{loginBean.logar}" styleClass="btn btn-outline-primary" />
+				<h:commandButton value="Limpar" type="reset" styleClass="btn btn-outline-warning" />
 			</h:panelGroup>
 		</h:panelGrid>
 		<h:messages />
 	</h:form>
+	
 </h:body>
 </html>
