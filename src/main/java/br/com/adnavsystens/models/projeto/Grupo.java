@@ -1,10 +1,24 @@
 package br.com.adnavsystens.models.projeto;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+
 import br.com.adnavsystens.models.Usuario;
 
+@Entity
 public class Grupo {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "grupo_seq")
+	@SequenceGenerator(name = "grupo_seq", allocationSize = 1)
 	private Long id;
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
 	private Usuario criadorResponsavel;
 	private String nome;
 	private String slogan;
@@ -41,5 +55,8 @@ public class Grupo {
 		this.imagemLogo = imagemLogo;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return nome + " - " + slogan;
+	}
 }

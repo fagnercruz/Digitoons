@@ -1,4 +1,4 @@
-package br.com.adnavsystens.beans;
+package br.com.adnavsystens.managebeans;
 
 import javax.faces.bean.ManagedBean;
 
