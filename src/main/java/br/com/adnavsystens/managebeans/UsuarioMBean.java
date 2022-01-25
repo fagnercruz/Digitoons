@@ -1,4 +1,4 @@
-package br.com.adnavsystens.beans;
+package br.com.adnavsystens.managebeans;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import br.com.adnavsystens.models.Usuario;
 
 @ViewScoped
 @ManagedBean
-public class UsuarioBean {
+public class UsuarioMBean {
 
 	Usuario usuario = new Usuario();
 	GenericDAO<Usuario> daousuario = new GenericDAO<Usuario>();

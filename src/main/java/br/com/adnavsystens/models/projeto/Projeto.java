@@ -4,24 +4,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import br.com.adnavsystens.models.Usuario;
+import br.com.adnavsystens.enuns.Status;
 
-//@Entity
+
+@Entity
 public class Projeto {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "proj_generator")
-//	@SequenceGenerator(name = "proj_generator", allocationSize = 1)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "proj_generator")
+	@SequenceGenerator(name = "proj_generator", allocationSize = 1)
 	private Long id;
 	private String titulo;
 	private String resumo;
 	private String descricao;
 	private String autor;
-	private String publisher;
+	@ManyToOne()
+	@JoinColumn(name = "grupo_id")
+	private Grupo grupo;
 	private String imagemCapa;
 	private String imagemBanner;
+	private Status status;
+	
 	
 	public Long getId() {
 		return id;
@@ -53,11 +60,11 @@ public class Projeto {
 	public void setAutor(String autor) {
 		this.autor = autor;
 	}
-	public String getPublisher() {
-		return publisher;
+	public Grupo getGrupo() {
+		return grupo;
 	}
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
 	}
 	public String getImagemCapa() {
 		return imagemCapa;
@@ -70,6 +77,12 @@ public class Projeto {
 	}
 	public void setImagemBanner(String imagemBanner) {
 		this.imagemBanner = imagemBanner;
+	}
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	
 	

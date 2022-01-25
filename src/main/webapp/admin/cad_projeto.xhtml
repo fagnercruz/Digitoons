@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<!-- bootstrap 4.1.3 -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+	<title>Digitoons :: Projetos</title>
+</h:head>
+<h:body>
+
+	<!-- BARRA DE MENU -->
+		<h:link value="Home" outcome="/index?faces-redirect=true" />
+		
+		<h:panelGroup rendered="#{usuarioLogado == null}">
+			<h:outputText value="Olá Visitante, Efetue o login " />
+			<h:link value="[aquí]" outcome="login" />
+		</h:panelGroup>
+		
+		<h:form id="userLogadoForm" rendered="#{usuarioLogado != null}">
+			<h:outputText value="Olá #{usuarioLogado.nome} - "  />
+			<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
+		</h:form>
+	<!-- /BARRA DE MENU -->
+
+	<h:form>
+		<h2>Cadastro de Projeto</h2>
+
+	<h:panelGrid columns="2">
+		<h:outputLabel for="titProjeto" value="Título:" />
+		<h:inputText id="titProjeto"  />
+		
+		<h:outputLabel for="resumo" value="Resumo:" />
+		<h:inputText id="resumo"  />
+		
+		<h:outputLabel for="descricao" value="Descrição" />
+		<h:inputText id="descricao"  />
+		
+		<h:outputLabel for="autor" value="Autor:" />
+		<h:inputText id="autor"  />
+		
+		<h:outputLabel for="publisher" value="Publicado por:" />
+		<h:inputText id="publisher"  />
+		
+		<h:outputLabel for="imgCapa" value="Capa:" />
+		<h:inputText id="imgCapa"  />
+		
+		<h:outputLabel for="imgBanner" value="Banner:" />
+		<h:inputText id="imgBanner"  />
+		
+		<h:commandButton type="submit" value="Salvar" />
+		<h:commandButton type="reset" value="Limpar" />
+	</h:panelGrid>
+	
+	</h:form>
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</h:body>
+</html>

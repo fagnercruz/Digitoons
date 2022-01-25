@@ -1,9 +1,10 @@
-package br.com.adnavsystens.beans;
+package br.com.adnavsystens.managebeans;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
+import javax.servlet.RequestDispatcher;
 
 import br.com.adnavsystens.connection.GenericDAO;
 
@@ -11,7 +12,7 @@ import br.com.adnavsystens.models.Login;
 import br.com.adnavsystens.models.Usuario;
 
 @ManagedBean
-public class LoginBean {
+public class LoginMBean {
 
 	private GenericDAO<Login> daoLogin = new GenericDAO<Login>();
 	private Login login = new Login();
@@ -52,7 +53,9 @@ public class LoginBean {
 	public String logout() {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("usuarioLogado");
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-		return "index?faces-redirect=true";
+//		String context = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+		return "/index?faces-redirect=true";
+		
 	}
 
 	public GenericDAO<Login> getDaoLogin() {

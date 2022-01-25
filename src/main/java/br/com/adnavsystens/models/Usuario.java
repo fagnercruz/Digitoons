@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+
+import br.com.adnavsystens.models.projeto.Grupo;
 
 @Entity
 public class Usuario {
@@ -23,6 +26,8 @@ public class Usuario {
 	private String email;
 //	private List<String> permissoes;
 	private String caminhoDaImagem;
+	@OneToMany(mappedBy = "criadorResponsavel")
+	private List<Grupo> grupos;
 	
 	public Long getId() {
 		return id;
@@ -61,7 +66,10 @@ public class Usuario {
 		this.login = login;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.nome + " - " + this.email;
+	}
 	
 
 }

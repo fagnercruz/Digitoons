@@ -17,7 +17,7 @@
 
 	<h:form id="userLogadoForm" rendered="#{usuarioLogado != null}">
 		<h:outputText value="Olá #{usuarioLogado.nome} - "  />
-		<h:commandLink value="[Logout]" action="#{loginBean.logout}" />
+		<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
 	</h:form>
 
 	<h:form>
@@ -25,9 +25,15 @@
 		<h3>Seções</h3>
 		<ul>
 			<li>Login / início de sessão</li>
-			<li><h:link value="Cadastro de Usuário" outcome="admin/cadUsuario.jsf" /></li>
+			<li><h:link value="Cadastro de Usuário" outcome="admin/cad_usuario" /></li>
+			<li><h:link value="Cadastro de Grupo" outcome="admin/cad_grupo" /></li>
+			<li><h:link value="Cadastro de projeto" outcome="admin/cad_projeto" /></li>
+			<li><h:link value="Cadastro de Volume" outcome="admin/cad_volume" /></li>
+			<li><h:link value="Cadastro de capitulo" outcome="admin/cad_capitulo" /></li>
+			<li style="text-decoration: none; list-style: none;">----</li>
 			<li><h:link value="Extra - Teste de upload de arquivo" outcome="teste_upload?faces-redirect=true" /></li>
 		</ul>
 	</h:form>
+	<h:link value="Refresh" outcome="index" />
 </h:body>
 </html>
