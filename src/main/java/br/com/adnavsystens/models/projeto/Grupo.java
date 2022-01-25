@@ -1,11 +1,14 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import br.com.adnavsystens.models.Usuario;
@@ -23,6 +26,8 @@ public class Grupo {
 	private String nome;
 	private String slogan;
 	private String imagemLogo;
+	@OneToMany(mappedBy = "grupo")
+	private List<Projeto> projetos;
 	
 	public Long getId() {
 		return id;
@@ -55,6 +60,12 @@ public class Grupo {
 		this.imagemLogo = imagemLogo;
 	}
 	
+	public List<Projeto> getProjetos() {
+		return projetos;
+	}
+	public void setProjetos(List<Projeto> projetos) {
+		this.projetos = projetos;
+	}
 	@Override
 	public String toString() {
 		return nome + " - " + slogan;
