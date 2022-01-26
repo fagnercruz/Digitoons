@@ -47,7 +47,8 @@ public class GrupoMBean {
 	}
 	public String salvarProjeto() {
 		Grupo gpAux = new Grupo();
-		gpAux.setId((Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("idGrupoDetalhes"));
+//		gpAux.setId((Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("idGrupoDetalhes"));
+		gpAux.setId(idGrupo);
 		projeto.setGrupo((Grupo) daoGrupo.pesquisar(gpAux));
 		projeto.setStatus(Status.CRIADO);
 		daoProjeto.salvar(projeto);
@@ -61,7 +62,7 @@ public class GrupoMBean {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("idGrupoDetalhes", grupo.getId());
+		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("idGrupoDetalhes", grupo.getId());
 		listarProjetos();
 		return "/admin/info_grupo";
 	}
