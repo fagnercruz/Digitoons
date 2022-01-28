@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
@@ -16,7 +16,7 @@ import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class GrupoMBean {
 
 	private Grupo grupo = new Grupo();
@@ -31,7 +31,7 @@ public class GrupoMBean {
 	/* Atribui ao usuário da sessão a propriedade do grupo criado */
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	private Long idGrupo;
-	
+
 	public String imprime() {
 		System.out.println(usuarioLogado);
 		System.out.println(grupo);
@@ -70,13 +70,15 @@ public class GrupoMBean {
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void listarTodosDoUsuario() {
-		String hql = "from Grupo g where g.criadorResponsavel.id = :idUsuario";
-		
-		EntityManager manager = daoGrupo.getEntityManager();
-		
-		grupos = (List<Grupo>) manager.createQuery(hql)
-				.setParameter("idUsuario", usuarioLogado.getId())
-				.getResultList();
+		if(usuarioLogado != null) {
+			String hql = "from Grupo g where g.criadorResponsavel = :idUsuario";
+			
+			EntityManager manager = daoGrupo.getEntityManager();
+			
+			grupos = (List<Grupo>) manager.createQuery(hql)
+					.setParameter("idUsuario", usuarioLogado)
+					.getResultList();
+		}
 	}
 	
 	public void excluir() {
@@ -139,8 +141,4 @@ public class GrupoMBean {
 		this.projetos = projetos;
 	}
 
-	
-	
-	
-	
 }

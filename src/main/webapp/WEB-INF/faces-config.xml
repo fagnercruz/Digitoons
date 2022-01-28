@@ -4,5 +4,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee https://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
     version="2.2">
+    
+    <!--  informando o listener
+    <lifecycle>
+	    <phase-listener>br.com.adnavsystens.listener.CicloDeVidaListener</phase-listener>
+	</lifecycle>-->
 
 </faces-config>

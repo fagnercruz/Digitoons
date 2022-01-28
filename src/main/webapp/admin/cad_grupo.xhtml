@@ -48,7 +48,7 @@
 	</h:form>
 	
 	<h3>Grupos de sua propriedade</h3>
-	<h:dataTable var="grupo" value="#{grupoMBean.grupos}" id="tabelaGrupos" styleClass="table table-hover mx-auto">
+	<h:dataTable var="grupo" value="#{grupoMBean.grupos}" id="grupoDataTable" styleClass="table table-hover mx-auto">
 		<h:column>
 			<f:facet name="header">Nome</f:facet>
 			#{grupo.nome}
@@ -60,10 +60,10 @@
 		<h:column>
 			<f:facet name="header">Ações</f:facet>
 			<h:form id="formActionsGroup">
-				<h:commandLink value="+ Info" action="#{grupoMBean.carregarDetalhes}">
+				<h:commandLink value="+ Info " action="#{grupoMBean.carregarDetalhes}">
 					<f:setPropertyActionListener value="#{grupo.id}" target="#{grupoMBean.idGrupo}" />
 				</h:commandLink>
-				<h:commandLink value="Editar" />
+				<h:commandLink value="Editar " />
 				<h:commandLink value="Excluir" />
 			</h:form>
 		</h:column>

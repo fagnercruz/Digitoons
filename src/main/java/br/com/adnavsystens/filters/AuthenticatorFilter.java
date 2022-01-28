@@ -13,7 +13,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
 import br.com.adnavsystens.connection.HibernateUtils;
 
 
@@ -32,7 +31,7 @@ public class AuthenticatorFilter implements Filter {
 		
 		
 		if(interceptar && !paginaRequisitada.contains("/javax.faces.resource")) {
-			System.out.println(paginaRequisitada + " interceptada." );
+			//System.out.println(paginaRequisitada + " interceptada." );
 			HttpSession session = httpRequest.getSession();
 			
 			if(session.getAttribute("usuarioLogado") == null && !(paginaRequisitada.contains("/login.") || paginaRequisitada.contains("/index."))) {

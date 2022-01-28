@@ -4,10 +4,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
-import javax.servlet.RequestDispatcher;
 
 import br.com.adnavsystens.connection.GenericDAO;
-
 import br.com.adnavsystens.models.Login;
 import br.com.adnavsystens.models.Usuario;
 

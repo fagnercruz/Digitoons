@@ -16,7 +16,7 @@ public class UsuarioArquivoBean {
 	private ApplicationPart arquivo;
 
 	public String salvar() {
-		String caminho = ArquivoUtils.armazenaImagem("C:\\XXX\\YYY\\", arquivo);
+	String caminho = ArquivoUtils.armazenaImagem("C:\\XXX\\YYY\\", arquivo);
 		if(caminho != null) {
 			usuario.setCaminhoDaImagem(caminho);
 			usuario = daoUsuario.salvar(usuario);
