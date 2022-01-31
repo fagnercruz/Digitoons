@@ -31,11 +31,11 @@
 	<!-- /BARRA DE MENU -->
 
 	
-		<h2>Detalhes de [<h:outputLabel id="labelGrupo" value="#{grupoMBean.grupo.nome}" />]</h2>
+		<h2>Detalhes de [<h:outputLabel id="labelGrupo" value="#{grupoNaSessao.nome}" />]</h2>
 
 		<h:panelGrid columns="2">
 			<h:outputText value="Slogan: " style="font-weight: bold;" />
-			<h:outputText id="slogan" value="#{grupoMBean.grupo.slogan}"
+			<h:outputText id="slogan" value="#{grupoNaSessao.slogan}"
 				style="font-style: italic;" />
 		</h:panelGrid>
 	<br /><br />
@@ -44,27 +44,25 @@
 		<h:panelGrid columns="2">
 			<f:facet name="header">Novo projeto</f:facet>
 			<h:outputLabel for="titulo" value="Título:" />
-			<h:inputText id="titulo" value="#{grupoMBean.projeto.titulo}" />
+			<h:inputText id="titulo" value="#{projetoMBean.projeto.titulo}" />
 
 			<h:outputLabel for="resumo" value="Resumo: " />
-			<h:inputText id="resumo" value="#{grupoMBean.projeto.resumo}" />
+			<h:inputText id="resumo" value="#{projetoMBean.projeto.resumo}" />
 
 			<h:outputLabel for="descricao" value="Descrição: " />
-			<h:inputText id="descricao" value="#{grupoMBean.projeto.descricao}" />
+			<h:inputText id="descricao" value="#{projetoMBean.projeto.descricao}" />
 
 			<h:outputLabel for="autor" value="Autor:  " />
-			<h:inputText id="autor" value="#{grupoMBean.projeto.autor}" />
+			<h:inputText id="autor" value="#{projetoMBean.projeto.autor}" />
 
 			<h:outputLabel for="imgCapa" value="Capa: " />
-			<h:inputText id="imgCapa" value="#{grupoMBean.projeto.imagemCapa}" />
+			<h:inputText id="imgCapa" value="#{projetoMBean.projeto.imagemCapa}" />
 
 			<h:outputLabel for="imgBanner" value="Banner:  " />
-			<h:inputText id="imgBanner"
-				value="#{grupoMBean.projeto.imagemBanner}" />
+			<h:inputText id="imgBanner" value="#{projetoMBean.projeto.imagemBanner}" />
 
-			<h:inputHidden id="idGrupo" value="#{grupoMBean.idGrupo}" />
 			<h:panelGroup>
-				<h:commandButton type="submit" value="Salvar" action="#{grupoMBean.salvarProjeto}" styleClass="btn btn-primary" style=" margin-right:10px;" />
+				<h:commandButton type="submit" value="Salvar" action="#{projetoMBean.salvar}" styleClass="btn btn-primary" style=" margin-right:10px;" />
 				<h:commandButton type="reset" value="Limpar" styleClass="btn btn-secondary" />
 			</h:panelGroup>
 		</h:panelGrid>
@@ -73,7 +71,7 @@
 
 	<h3>Projetos</h3>
 	
-		<h:dataTable var="projeto" value="#{grupoMBean.projetos}" id="projDataTable" styleClass="table table-hover mx-auto">
+		<h:dataTable var="projeto" value="#{projetoMBean.listaProjetos}" id="projDataTable" styleClass="table table-hover mx-auto">
 			<h:column>
 				<f:facet name="header">Título</f:facet>
 				#{projeto.titulo}
@@ -92,24 +90,13 @@
 			<h:column>
 				<f:facet name="header">Ações</f:facet>
 				<h:form id="actionsInsideDatatable">
-					<h:commandLink value="DETALHES " action="#{projetoMBean.carregarDetalhesProjeto}">
+					<h:commandButton value="DETALHES " action="#{projetoMBean.carregarDetalhesProjeto}">
 						<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}" />
-					</h:commandLink>
-					<h:commandButton value="INFO" action="#{projetoMBean.carregarDetalhesProjeto}">
-						<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}"></f:setPropertyActionListener>
 					</h:commandButton>
 				</h:form>
 			</h:column>
 		</h:dataTable>
 		
-		<h:form id="actionsInsideDatatable">
-			<h:commandLink value="DETALHES " action="#{projetoMBean.carregarDetalhesProjeto}">
-				<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}" />
-			</h:commandLink>
-		</h:form>
-		
-		
-
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

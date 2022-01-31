@@ -5,25 +5,23 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
 import br.com.adnavsystens.connection.GenericDAO;
-import br.com.adnavsystens.enuns.Status;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
 
+
 @ManagedBean
-@ViewScoped
 public class GrupoMBean {
+	
 
 	private Grupo grupo = new Grupo();
 	private Projeto projeto = new Projeto();
 	
 	private GenericDAO<Grupo> daoGrupo = new GenericDAO<Grupo>();
-	private GenericDAO<Projeto> daoProjeto = new GenericDAO<Projeto>();
 	
 	private List<Grupo> grupos = new ArrayList<Grupo>();
 	private List<Projeto> projetos = new ArrayList<Projeto>();
@@ -31,51 +29,33 @@ public class GrupoMBean {
 	/* Atribui ao usuário da sessão a propriedade do grupo criado */
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	private Long idGrupo;
-
-	public String imprime() {
-		System.out.println(usuarioLogado);
-		System.out.println(grupo);
-		return "";
-	}
 	
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
 		daoGrupo.salvar(grupo);
 		grupo = new Grupo(); // limpa os campos
-		listarTodosDoUsuario();
+		listarGruposUsuarioLogado();
 		return "";
 	}
-	public String salvarProjeto() {
-		Grupo gpAux = new Grupo();
-//		gpAux.setId((Long) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("idGrupoDetalhes"));
-		gpAux.setId(idGrupo);
-		projeto.setGrupo((Grupo) daoGrupo.pesquisar(gpAux));
-		projeto.setStatus(Status.CRIADO);
-		daoProjeto.salvar(projeto);
-		projeto = new Projeto();
-		grupo = daoGrupo.pesquisar(gpAux); // evita a perda do grupo atualizado após voltar para a tela.
-		listarProjetos();
-		return "";
-	}
-	
+
 	public String carregarDetalhes() {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
-		//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("idGrupoDetalhes", grupo.getId());
-		listarProjetos();
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("grupoNaSessao", grupo);
 		return "/admin/info_grupo";
 	}
 	
+	
+	/* esse metodo faz mais sentido estando em usuario */
 	@SuppressWarnings("unchecked")
 	@PostConstruct
-	public void listarTodosDoUsuario() {
+	public void listarGruposUsuarioLogado() {
 		if(usuarioLogado != null) {
-			String hql = "from Grupo g where g.criadorResponsavel = :idUsuario";
-			
 			EntityManager manager = daoGrupo.getEntityManager();
 			
-			grupos = (List<Grupo>) manager.createQuery(hql)
+			grupos = (List<Grupo>) manager
+					.createQuery("from Grupo g where g.criadorResponsavel = :idUsuario")
 					.setParameter("idUsuario", usuarioLogado)
 					.getResultList();
 		}
@@ -85,21 +65,10 @@ public class GrupoMBean {
 		daoGrupo.excluir(grupo);
 	}
 
-	/* métodos auxiliares */
-	
-	@SuppressWarnings("unchecked")
-	//@PostConstruct 
-	public void listarProjetos() {
-		String hql = "from Projeto p where p.grupo = :grupo";
-		EntityManager manager = daoProjeto.getEntityManager();
-		projetos = (List<Projeto>) manager.createQuery(hql).setParameter("grupo", grupo).getResultList();
+	public void resetGrupoSessao() {
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("grupoNaSessao");
 	}
-	
-	public boolean possuiProjetos() {
-		return false;
-	}
-	
-	
+		
 	/* Getters e Setter */
 	public Grupo getGrupo() {
 		return grupo;
