@@ -30,15 +30,16 @@
 		</h:form>
 	<!-- /BARRA DE MENU -->
 
+	<br/>
 	
-		<h2>Detalhes de [<h:outputLabel id="labelGrupo" value="#{grupoNaSessao.nome}" />]</h2>
-
-		<h:panelGrid columns="2">
-			<h:outputText value="Slogan: " style="font-weight: bold;" />
-			<h:outputText id="slogan" value="#{grupoNaSessao.slogan}"
-				style="font-style: italic;" />
+		<h:panelGrid>
+			<h:panelGroup>
+				<span style="font-size: 24pt;">Grupo: <h:outputLabel id="labelGrupo" value="#{grupoNaSessao.nome}" style="color: blue;"/></span>
+			</h:panelGroup>
+		<h:outputText id="slogan" value="#{grupoNaSessao.slogan}" style="font-style: italic; "/>
 		</h:panelGrid>
-	<br /><br />
+		
+	<br />
 
 	<h:form id="cadProjeto">
 		<h:panelGrid columns="2">
@@ -61,6 +62,7 @@
 			<h:outputLabel for="imgBanner" value="Banner:  " />
 			<h:inputText id="imgBanner" value="#{projetoMBean.projeto.imagemBanner}" />
 
+			<h:outputLabel value="" />
 			<h:panelGroup>
 				<h:commandButton type="submit" value="Salvar" action="#{projetoMBean.salvar}" styleClass="btn btn-primary" style=" margin-right:10px;" />
 				<h:commandButton type="reset" value="Limpar" styleClass="btn btn-secondary" />
@@ -68,10 +70,11 @@
 		</h:panelGrid>
 	</h:form>
 
+	<br/>
 
-	<h3>Projetos</h3>
-	
+		<h:form>
 		<h:dataTable var="projeto" value="#{projetoMBean.listaProjetos}" id="projDataTable" styleClass="table table-hover mx-auto">
+			<f:facet name="header">Projetos de <h:outputText value="#{grupoNaSessao.nome}" /> </f:facet>
 			<h:column>
 				<f:facet name="header">Título</f:facet>
 				#{projeto.titulo}
@@ -89,14 +92,14 @@
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ações</f:facet>
-				<h:form id="actionsInsideDatatable">
+				
 					<h:commandButton value="DETALHES " action="#{projetoMBean.carregarDetalhesProjeto}">
 						<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}" />
 					</h:commandButton>
-				</h:form>
+				
 			</h:column>
 		</h:dataTable>
-		
+		</h:form>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

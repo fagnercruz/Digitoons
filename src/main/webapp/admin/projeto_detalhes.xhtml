@@ -5,13 +5,14 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-      
+
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 	<!-- bootstrap 4.1.3 -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
-	<title>Digitoons :: Grupos</title>
+	<title>Digitoons :: Detalhes do projeto</title>
 </h:head>
+
 
 <h:body>
 
@@ -30,50 +31,65 @@
 	<!-- /BARRA DE MENU -->
 
 	<h:form>
-	
-		<f:metadata>
-			<f:event listener="#{grupoMBean.resetGrupoSessao}" type="preRenderView" />
-		</f:metadata>
-		
-		<h2>Cadastro de Grupo</h2>
+		<h2><h:outputText value="#{projetoSessao.titulo}" /> </h2>
 		
 		<h:panelGrid columns="2">
-			<h:outputLabel for="nome" value="Nome:" />
-			<h:inputText id="nome" value="#{grupoMBean.grupo.nome}"  />
+			<h:outputText value="Autor: " style="font-weight: bold;" />
+			<h:outputText value="#{projetoSessao.autor}" />
 			
-			<h:outputLabel for="slogan" value="Slogan: " />
-			<h:inputText id="slogan" value="#{grupoMBean.grupo.slogan}"  />
+			<h:outputText value="Grupo:  " style="font-weight: bold;" />
+			<h:outputText id="publisher" value="#{projetoSessao.grupo.nome}" />
 			
-			<h:outputLabel for="imgLogo" value="Logomarca:" />
-			<h:inputText id="imgLogo" value="#{grupoMBean.grupo.imagemLogo}"  />
-				
-			<h:commandButton type="submit" value="Salvar" action="#{grupoMBean.salvar}" />
-			<h:commandButton type="reset" value="Limpar" />
+			<h:outputText value="Resumo: " style="font-weight: bold;" />
+			<h:outputText id="resumo" value="#{projetoSessao.resumo}" />
+			
+			<h:outputText value="Status: " style="font-weight: bold;" />
+			<h:outputText id="status" value="#{projetoSessao.status}" />
+			
 		</h:panelGrid>
+	
 	</h:form>
 	
-	<h3>Grupos de sua propriedade</h3>
-	<h:dataTable var="grupo" value="#{grupoMBean.grupos}" id="grupoDataTable" styleClass="table table-hover mx-auto">
+	<br />
+	<h:form>
+		<f:facet name="header">Add capítulo</f:facet>
+		<h:panelGrid columns="2">
+			<h:outputLabel for="numero" value="Nº:" />
+			<h:inputText id="numero" value="#{capituloMBean.capitulo.numero}" />
+
+			<h:outputLabel for="titulo" />
+			<h:inputText id="titulo" value="#{capituloMBean.capitulo.titulo}" />
+			
+			<h:outputLabel value="" />
+			<h:commandButton value="Adicionar" action="#{capituloMBean.salvar}" >
+				<f:setPropertyActionListener value="#{projetoSessao.id}" target="#{capituloMBean.idProjeto}" />
+			</h:commandButton>
+		</h:panelGrid>
+		
+	</h:form>
+	
+	
+	<br/>
+	<h:dataTable var="capitulo" value="#{capituloMBean.listaCapitulos}" id="projDataTable" styleClass="table table-hover mx-auto">
+		<f:facet name="header">Capítulos lançados</f:facet>
 		<h:column>
-			<f:facet name="header">Nome</f:facet>
-			#{grupo.nome}
+			<f:facet name="header">Cap. Nº</f:facet>
+			#{capitulo.numero}
 		</h:column>
 		<h:column>
-			<f:facet name="header">Slogan</f:facet>
-			#{grupo.slogan}
+			<f:facet name="header">Título</f:facet>
+			#{capitulo.titulo}
 		</h:column>
 		<h:column>
-			<f:facet name="header">Ações</f:facet>
-			<h:form id="formActionsGroup">
-				<h:commandLink value="+ Info " action="#{grupoMBean.carregarDetalhes}">
-					<f:setPropertyActionListener value="#{grupo.id}" target="#{grupoMBean.idGrupo}" />
-				</h:commandLink>
-				<h:commandLink value="Editar " />
-				<h:commandLink value="Excluir" />
-			</h:form>
+			<f:facet name="header">Data de lançamento</f:facet>
+		</h:column>
+		<h:column>
+			<f:facet name="header">Páginas</f:facet>
+		</h:column>
+		<h:column>
+			<f:facet name="header">Qtde. Views</f:facet>
 		</h:column>
 	</h:dataTable>
-	
 	
 	
 	

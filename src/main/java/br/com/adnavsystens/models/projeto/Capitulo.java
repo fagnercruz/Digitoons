@@ -1,14 +1,27 @@
 package br.com.adnavsystens.models.projeto;
 
-import java.util.List;
 
-import javax.persistence.OneToMany;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
+@Entity
 public class Capitulo {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "capitulo_seq")
+	@SequenceGenerator(name = "capitulo_seq", allocationSize = 1)
 	private Long id;
-	private String tituloCapitulo;
-	private int numCapitulo;
+	private String titulo;
+	private int numero;
+	@ManyToOne
+	@JoinColumn(name = "projeto_id")
+	private Projeto projeto;
+//	private Date dataLancamento;
 //	private List<String> paginas;
 	
 	public Long getId() {
@@ -17,18 +30,25 @@ public class Capitulo {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getTituloCapitulo() {
-		return tituloCapitulo;
+	public String getTitulo() {
+		return titulo;
 	}
-	public void setTituloCapitulo(String tituloCapitulo) {
-		this.tituloCapitulo = tituloCapitulo;
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
 	}
-	public int getNumCapitulo() {
-		return numCapitulo;
+	public int getNumero() {
+		return numero;
 	}
-	public void setNumCapitulo(int numCapitulo) {
-		this.numCapitulo = numCapitulo;
+	public void setNumero(int numero) {
+		this.numero = numero;
 	}
+	public Projeto getProjeto() {
+		return projeto;
+	}
+	public void setProjeto(Projeto projeto) {
+		this.projeto = projeto;
+	}
+	
 	
 	
 }

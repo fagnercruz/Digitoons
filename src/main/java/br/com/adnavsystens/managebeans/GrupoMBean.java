@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
-import br.com.adnavsystens.models.projeto.Projeto;
 
 
 @ManagedBean
@@ -19,16 +18,14 @@ public class GrupoMBean {
 	
 
 	private Grupo grupo = new Grupo();
-	private Projeto projeto = new Projeto();
-	
 	private GenericDAO<Grupo> daoGrupo = new GenericDAO<Grupo>();
-	
 	private List<Grupo> grupos = new ArrayList<Grupo>();
-	private List<Projeto> projetos = new ArrayList<Projeto>();
 	
 	/* Atribui ao usuário da sessão a propriedade do grupo criado */
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	private Long idGrupo;
+	
+	private Long idDeTeste;
 	
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
@@ -43,7 +40,7 @@ public class GrupoMBean {
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("grupoNaSessao", grupo);
-		return "/admin/info_grupo";
+		return "grupo_detalhes";
 	}
 	
 	
@@ -78,14 +75,6 @@ public class GrupoMBean {
 		this.grupo = grupo;
 	}
 
-	public Projeto getProjeto() {
-		return projeto;
-	}
-
-	public void setProjeto(Projeto projeto) {
-		this.projeto = projeto;
-	}
-
 	public List<Grupo> getGrupos() {
 		return grupos;
 	}
@@ -102,12 +91,12 @@ public class GrupoMBean {
 		this.idGrupo = idGrupo;
 	}
 
-	public List<Projeto> getProjetos() {
-		return projetos;
+	public Long getIdDeTeste() {
+		return idDeTeste;
 	}
 
-	public void setProjetos(List<Projeto> projetos) {
-		this.projetos = projetos;
+	public void setIdDeTeste(Long idDeTeste) {
+		this.idDeTeste = idDeTeste;
 	}
 
 }

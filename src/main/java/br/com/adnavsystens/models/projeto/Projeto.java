@@ -1,11 +1,15 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import br.com.adnavsystens.enuns.Status;
@@ -28,6 +32,8 @@ public class Projeto {
 	private String imagemCapa;
 	private String imagemBanner;
 	private Status status;
+	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL)
+	private List<Capitulo> capitulos;
 	
 	
 	public Long getId() {
@@ -83,6 +89,12 @@ public class Projeto {
 	}
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	public List<Capitulo> getCapitulos() {
+		return capitulos;
+	}
+	public void setCapitulos(List<Capitulo> capitulos) {
+		this.capitulos = capitulos;
 	}
 	
 	

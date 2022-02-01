@@ -2,12 +2,13 @@ package br.com.adnavsystens.enuns;
 
 public enum Status {
 
-	CRIADO("criado"),
-	ATIVO("ativo"),
-	PAUSADO("pausado"),
-	SUSPENSO("suspenso"),
-	FINALIZADO("finalizado"),
-	CANCELADO("cancelado");
+	CRIADO("Criado"),
+	ATIVO("Ativo"),
+	EM_ANDAMENTO("Em andamento"),
+	PAUSADO("Pausado"),
+	SUSPENSO("Suspenso"),
+	FINALIZADO("Finalizado"),
+	CANCELADO("Cancelado");
 	
 	private String descricao;
 	

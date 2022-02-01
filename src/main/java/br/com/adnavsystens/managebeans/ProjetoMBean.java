@@ -31,7 +31,8 @@ public class ProjetoMBean {
 		Projeto auxProj = new Projeto();
 		auxProj.setId(idProjeto);
 		projeto = daoProjeto.pesquisar(auxProj);
-		return "info_projeto";
+		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projetoSessao", projeto);
+		return "projeto_detalhes";
 	}
 	
 	public String salvar() {
