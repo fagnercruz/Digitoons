@@ -85,10 +85,15 @@
 			</h:column>
 			<h:column>
 				<f:facet name="header">Cap.Publicados</f:facet>
+				<h:outputLabel value="#{projeto.qtdeCapitulos}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">Ult. Atualiz.</f:facet>
+				<h:outputText value="" id="dtAtt" />
 			</h:column>
 			<h:column>
 				<f:facet name="header">Status</f:facet>
-				#{projeto.status}
+				#{projeto.status.descricao}
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ações</f:facet>

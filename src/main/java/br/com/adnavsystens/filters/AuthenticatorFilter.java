@@ -1,7 +1,6 @@
 package br.com.adnavsystens.filters;
 
 import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -31,12 +30,12 @@ public class AuthenticatorFilter implements Filter {
 		
 		
 		if(interceptar && !paginaRequisitada.contains("/javax.faces.resource")) {
-			//System.out.println(paginaRequisitada + " interceptada." );
 			HttpSession session = httpRequest.getSession();
-			
+					
 			if(session.getAttribute("usuarioLogado") == null && !(paginaRequisitada.contains("/login.") || paginaRequisitada.contains("/index."))) {
 				session.setAttribute("urlDestino", paginaRequisitada);
 				RequestDispatcher dispatcher = null;
+
 				if(paginaRequisitada.contains("/admin")) {
 					dispatcher = request.getRequestDispatcher("/login.jsf");
 				} else {

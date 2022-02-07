@@ -34,6 +34,7 @@ public class Projeto {
 	private Status status;
 	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL)
 	private List<Capitulo> capitulos;
+
 	
 	
 	public Long getId() {
@@ -97,6 +98,8 @@ public class Projeto {
 		this.capitulos = capitulos;
 	}
 	
-	
-	
+	public String getQtdeCapitulos() {
+		return String.valueOf(capitulos.size());
+	}
+		
 }

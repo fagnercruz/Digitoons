@@ -58,8 +58,9 @@ public class ProjetoMBean {
 	public void listarProjetos(){
 		Grupo gp = (Grupo) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("grupoNaSessao");
 		EntityManager manager = daoProjeto.getEntityManager();
-		listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo ").setParameter("grupo", gp).getResultList();
+		listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", gp).getResultList();
 	}
+
 	
 	public void excluir() {
 		daoProjeto.excluir(projeto);

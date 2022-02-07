@@ -1,6 +1,7 @@
 package br.com.adnavsystens.managebeans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ public class CapituloMBean {
 	private GenericDAO<Capitulo> daoCapitulo = new GenericDAO<>();
 	private GenericDAO<Projeto> daoProjeto = new GenericDAO<>();
 	private List<Capitulo> listaCapitulos = new ArrayList<>();
+
 	
 	public String initCapitulo() {
 		capitulo = new Capitulo();
@@ -28,13 +30,10 @@ public class CapituloMBean {
 	}
 	
 	public String salvar() {
-
 		/* capitulo pertence a um determinado projeto */
-		
 		if(idProjeto == null) {
 			return "";
 		}
-		
 		
 		Projeto projeto = new Projeto();
 		projeto.setId(idProjeto);
@@ -45,21 +44,23 @@ public class CapituloMBean {
 		}
 		
 		capitulo.setProjeto(projeto);
+		capitulo.setDataLancamento(Calendar.getInstance());
 		capitulo = daoCapitulo.salvar(capitulo);
 		
 		if(capitulo.getId() != null) {
 			projeto.setStatus(Status.EM_ANDAMENTO);
 			daoProjeto.salvar(projeto);
 		}
-		
-		return "";
+		listarCapitulos();
+		return initCapitulo();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void listarCapitulos() {
 		EntityManager manager = daoCapitulo.getEntityManager();
 		
-		listaCapitulos = (List<Capitulo>) manager.createQuery("from Capitulo c where c.projeto = :projeto")
+		listaCapitulos = (List<Capitulo>) manager.createQuery("from Capitulo c where c.projeto = :projeto order by c.id asc")
 			.setParameter("projeto", (Projeto) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("projetoSessao"))
 			.getResultList();
 	}

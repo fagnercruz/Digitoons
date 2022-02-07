@@ -17,12 +17,12 @@
 		
 		<h:panelGroup rendered="#{usuarioLogado == null}">
 			<h:outputText value="Olá Visitante, Efetue o login " />
-			<h:link value="[aquí]" outcome="login" />
+			<h:link value="[aquí]" outcome="login" id="clinklogin" />
 		</h:panelGroup>
 		
 		<h:form id="userLogadoForm" rendered="#{usuarioLogado != null}">
-			<h:outputText value="Olá #{usuarioLogado.nome} - "  />
-			<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
+			<h:outputText value="Olá #{usuarioLogado.nome} - " id="outptxtolá" />
+			<h:commandLink value="[Logout]" action="#{loginMBean.logout}" id="clinklogout" />
 		</h:form>
 	<!-- /BARRA DE MENU -->
 	

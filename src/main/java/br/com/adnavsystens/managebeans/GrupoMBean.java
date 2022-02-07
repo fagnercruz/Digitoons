@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
@@ -27,6 +28,7 @@ public class GrupoMBean {
 	
 	private Long idDeTeste;
 	
+		
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
 		daoGrupo.salvar(grupo);
