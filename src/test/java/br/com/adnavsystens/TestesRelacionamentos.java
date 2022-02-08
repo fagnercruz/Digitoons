@@ -2,7 +2,7 @@ package br.com.adnavsystens;
 
 
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Login;

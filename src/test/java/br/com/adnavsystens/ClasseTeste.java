@@ -1,10 +1,12 @@
 package br.com.adnavsystens;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import br.com.adnavsystens.connection.HibernateUtils;
+import junit.framework.TestCase;
 
-public class ClasseTeste {
+
+public class ClasseTeste extends TestCase {
 
 	@Test
 	public void testaConexao() {
