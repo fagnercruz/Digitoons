@@ -16,6 +16,13 @@
 
 <h:body>
 
+	<!-- SOLUÇÃO: PASSANDO PARAMENTROS SEM USAR SESSAO -->
+	<f:metadata>
+		<f:viewParam name="idProjeto" converter="javax.faces.Long" value="#{projetoMBean.idProjeto}" />
+		<f:event listener="#{projetoMBean.carregarDetalhesProjeto}" type="preRenderView" />
+	</f:metadata>
+
+
 	<!-- BARRA DE MENU -->
 		<h:link value="Home" outcome="/index?faces-redirect=true" />
 		
@@ -31,20 +38,20 @@
 	<!-- /BARRA DE MENU -->
 
 	<h:form>
-		<h2><h:outputText value="#{projetoSessao.titulo}" /> </h2>
+		<h2><h:outputText value="#{projetoMBean.projeto.titulo}" /> </h2>
 		
 		<h:panelGrid columns="2">
 			<h:outputText value="Autor: " style="font-weight: bold;" />
-			<h:outputText value="#{projetoSessao.autor}" />
+			<h:outputText value="#{projetoMBean.projeto.autor}" />
 			
 			<h:outputText value="Grupo:  " style="font-weight: bold;" />
-			<h:outputText id="publisher" value="#{projetoSessao.grupo.nome}" />
+			<h:outputText id="publisher" value="#{projetoMBean.projeto.grupo}" />
 			
 			<h:outputText value="Resumo: " style="font-weight: bold;" />
-			<h:outputText id="resumo" value="#{projetoSessao.resumo}" />
+			<h:outputText id="resumo" value="#{projetoMBean.projeto.resumo}" />
 			
 			<h:outputText value="Status: " style="font-weight: bold;" />
-			<h:outputText id="status" value="#{projetoSessao.status.descricao}" />
+			<h:outputText id="status" value="#{projetoMBean.projeto.status.descricao}" />
 			
 		</h:panelGrid>
 	
@@ -52,8 +59,9 @@
 	
 	<br />
 	<h:form>
-		<f:facet name="header">Add capítulo</f:facet>
 		<h:panelGrid columns="2">
+			<f:facet name="header">Add capítulo</f:facet>
+			
 			<h:outputLabel for="numero" value="Nº:" />
 			<h:inputText id="numero" value="#{capituloMBean.capitulo.numero}" />
 
@@ -62,7 +70,7 @@
 			
 			<h:outputLabel value="" />
 			<h:commandButton value="Adicionar" action="#{capituloMBean.salvar}" >
-				<f:setPropertyActionListener value="#{projetoSessao.id}" target="#{capituloMBean.idProjeto}" />
+				<f:param value="#{projetoMBean.projeto.id}" id="idProjeto" name="idProjeto" />
 			</h:commandButton>
 		</h:panelGrid>
 		
@@ -70,7 +78,7 @@
 	
 	
 	<br/>
-	<h:dataTable var="capitulo" value="#{capituloMBean.listaCapitulos}" id="projDataTable" styleClass="table table-hover mx-auto">
+	<h:dataTable var="capitulo" value="#{projetoMBean.projeto.capitulos}" id="projDataTable" styleClass="table table-hover mx-auto">
 		<f:facet name="header">Capítulos lançados</f:facet>
 		<h:column>
 			<f:facet name="header">Cap. Nº</f:facet>

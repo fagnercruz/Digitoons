@@ -17,7 +17,6 @@ import br.com.adnavsystens.models.projeto.Projeto;
 @ManagedBean
 public class CapituloMBean {
 
-	private Long idProjeto;
 	private Capitulo capitulo = new Capitulo();
 	private GenericDAO<Capitulo> daoCapitulo = new GenericDAO<>();
 	private GenericDAO<Projeto> daoProjeto = new GenericDAO<>();
@@ -31,7 +30,11 @@ public class CapituloMBean {
 	
 	public String salvar() {
 		/* capitulo pertence a um determinado projeto */
-		if(idProjeto == null) {
+		Long idProjeto = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto"));
+		
+		System.out.println(idProjeto);
+		
+		if(idProjeto == null || idProjeto == 0 ) {
 			return "";
 		}
 		
@@ -52,6 +55,10 @@ public class CapituloMBean {
 			daoProjeto.salvar(projeto);
 		}
 		listarCapitulos();
+		ProjetoMBean projetoMBean = new ProjetoMBean();
+		projetoMBean.setIdProjeto(idProjeto);
+		projetoMBean.carregarDetalhesProjeto();
+				
 		return initCapitulo();
 	}
 	
@@ -66,32 +73,6 @@ public class CapituloMBean {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public Long getIdProjeto() {
-		return idProjeto;
-	}
-	public void setIdProjeto(Long idProjeto) {
-		this.idProjeto = idProjeto;
-	}
 	public Capitulo getCapitulo() {
 		return capitulo;
 	}

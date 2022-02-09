@@ -1,5 +1,7 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -62,6 +64,7 @@ public class Grupo {
 	}
 	
 	public List<Projeto> getProjetos() {
+		projetos.sort(null);
 		return projetos;
 	}
 	public void setProjetos(List<Projeto> projetos) {

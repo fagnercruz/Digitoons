@@ -16,6 +16,12 @@
 
 <h:body>
 
+	<f:metadata>
+		<f:viewParam name="idGrupo" converter="javax.faces.Long" value="#{grupoMBean.idGrupo}" />
+		<f:event listener="#{grupoMBean.carregarDetalhes}" type="preRenderView" />
+	</f:metadata>
+
+
 	<!-- BARRA DE MENU -->
 		<h:link value="Home" outcome="/index?faces-redirect=true" />
 	
@@ -34,9 +40,9 @@
 	
 		<h:panelGrid>
 			<h:panelGroup>
-				<span style="font-size: 24pt;">Grupo: <h:outputLabel id="labelGrupo" value="#{grupoNaSessao.nome}" style="color: blue;"/></span>
+				<span style="font-size: 24pt;">Grupo: <h:outputLabel id="labelGrupo" value="#{grupoMBean.grupo.nome}" style="color: blue;"/></span>
 			</h:panelGroup>
-		<h:outputText id="slogan" value="#{grupoNaSessao.slogan}" style="font-style: italic; "/>
+		<h:outputText id="slogan" value="#{grupoMBean.grupo.slogan}" style="font-style: italic; "/>
 		</h:panelGrid>
 		
 	<br />
@@ -73,8 +79,8 @@
 	<br/>
 
 		<h:form>
-		<h:dataTable var="projeto" value="#{projetoMBean.listaProjetos}" id="projDataTable" styleClass="table table-hover mx-auto">
-			<f:facet name="header">Projetos de <h:outputText value="#{grupoNaSessao.nome}" /> </f:facet>
+		<h:dataTable var="projeto" value="#{grupoMBean.grupo.projetos}" id="projDataTable" styleClass="table table-hover mx-auto" >
+			<f:facet name="header">Projetos de <h:outputText value="#{grupoMBean.grupo.nome}" /> </f:facet>
 			<h:column>
 				<f:facet name="header">Título</f:facet>
 				#{projeto.titulo}
@@ -97,14 +103,15 @@
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ações</f:facet>
-				
-					<h:commandButton value="DETALHES " action="#{projetoMBean.carregarDetalhesProjeto}">
-						<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}" />
-					</h:commandButton>
-				
+					<h:link type="button" value="Link" outcome="projeto_detalhes" styleClass="btn btn-primary">
+						<f:param id="idProjeto" name="idProjeto" value="#{projeto.id}" />
+					</h:link>
 			</h:column>
 		</h:dataTable>
 		</h:form>
+
+
+
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

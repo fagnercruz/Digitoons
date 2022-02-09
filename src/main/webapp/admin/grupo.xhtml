@@ -69,11 +69,9 @@
 		<h:column>
 			<f:facet name="header">Ações</f:facet>
 			<h:form id="formActionsGroup">
-				<h:commandButton value="Detalhes" action="#{grupoMBean.carregarDetalhes}" >
-					<f:setPropertyActionListener value="#{grupo.id}" target="#{grupoMBean.idGrupo}" />
-				</h:commandButton>
-				<h:commandButton value="Editar" style="margin-left: 10px;" />
-				<h:commandButton value="Excluir" style="margin-left: 10px;" />
+				<h:link styleClass="btn btn-primary" value="DETALHES" outcome="grupo_detalhes" >
+					<f:param id="idGrupo" name="idGrupo" value="#{grupo.id}" />
+				</h:link>	
 			</h:form>
 		</h:column>
 	</h:dataTable>

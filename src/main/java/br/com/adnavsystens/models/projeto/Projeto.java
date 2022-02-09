@@ -1,5 +1,6 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,7 +17,7 @@ import br.com.adnavsystens.enuns.Status;
 
 
 @Entity
-public class Projeto {
+public class Projeto implements Comparable<Projeto>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "proj_generator")
@@ -101,5 +102,18 @@ public class Projeto {
 	public String getQtdeCapitulos() {
 		return String.valueOf(capitulos.size());
 	}
+	
+	@Override
+	public int compareTo(Projeto proj) {
+		if(id > proj.id) {
+			return 1;
+		}
 		
+		if(id == proj.id) {
+			return 0;
+		}
+
+		return -1;
+	}
+
 }

@@ -27,12 +27,10 @@ public class ProjetoMBean {
 	private List<Projeto> listaProjetos = new ArrayList<>();
 		
 	
-	public String carregarDetalhesProjeto() {
+	public void carregarDetalhesProjeto() {
 		Projeto auxProj = new Projeto();
 		auxProj.setId(idProjeto);
 		projeto = daoProjeto.pesquisar(auxProj);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projetoSessao", projeto);
-		return "projeto_detalhes";
 	}
 	
 	public String salvar() {
@@ -59,6 +57,12 @@ public class ProjetoMBean {
 		Grupo gp = (Grupo) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("grupoNaSessao");
 		EntityManager manager = daoProjeto.getEntityManager();
 		listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", gp).getResultList();
+	}
+	
+	/* usado por outros MBs */
+	@SuppressWarnings("unchecked")
+	public List<Projeto> carregarProjetosDoGrupo(Long idGrupo){
+		return (List<Projeto>) daoProjeto.getEntityManager().createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", idGrupo).getResultList();
 	}
 
 	

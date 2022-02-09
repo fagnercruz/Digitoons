@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
@@ -26,7 +25,6 @@ public class GrupoMBean {
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	private Long idGrupo;
 	
-	private Long idDeTeste;
 	
 		
 	public String salvar() {
@@ -37,12 +35,10 @@ public class GrupoMBean {
 		return "";
 	}
 
-	public String carregarDetalhes() {
+	public void carregarDetalhes() {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("grupoNaSessao", grupo);
-		return "grupo_detalhes";
 	}
 	
 	
@@ -91,14 +87,6 @@ public class GrupoMBean {
 
 	public void setIdGrupo(Long idGrupo) {
 		this.idGrupo = idGrupo;
-	}
-
-	public Long getIdDeTeste() {
-		return idDeTeste;
-	}
-
-	public void setIdDeTeste(Long idDeTeste) {
-		this.idDeTeste = idDeTeste;
 	}
 
 }
