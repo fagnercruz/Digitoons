@@ -20,13 +20,18 @@ public class GenericDAO<E> {
 	@SuppressWarnings("unchecked")
 	public E pesquisar(E entity) {
 		Object id = HibernateUtils.getPK(entity);
-		return (E) manager.find(entity.getClass(), id);
+		manager.getTransaction().begin();
+		E e = (E) manager.find(entity.getClass(), id);
+		manager.getTransaction().commit();
+		return e;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<E> pesquisarTodos(Class<E> entityClass) {
-		return (List<E>) manager.createQuery("from " + entityClass.getSimpleName())
-				.getResultList();
+		manager.getTransaction().begin();
+		List<E> list =  (List<E>) manager.createQuery("from " + entityClass.getSimpleName()).getResultList();
+		manager.getTransaction().commit();
+		return list;
 	}
 		
 	public void excluir(E Entity) {

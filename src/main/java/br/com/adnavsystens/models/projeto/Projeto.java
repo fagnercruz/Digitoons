@@ -1,10 +1,10 @@
 package br.com.adnavsystens.models.projeto;
 
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,7 +33,7 @@ public class Projeto implements Comparable<Projeto>{
 	private String imagemCapa;
 	private String imagemBanner;
 	private Status status;
-	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Capitulo> capitulos;
 
 	

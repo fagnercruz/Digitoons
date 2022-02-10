@@ -3,13 +3,13 @@ package br.com.adnavsystens.managebeans;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.enuns.Status;
+import br.com.adnavsystens.models.projeto.Capitulo;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
 
@@ -31,8 +31,11 @@ public class ProjetoMBean {
 		Projeto auxProj = new Projeto();
 		auxProj.setId(idProjeto);
 		projeto = daoProjeto.pesquisar(auxProj);
+		List<Capitulo> capitulosAtualizados = listarCapitulosDoProjeto(idProjeto); // puxa a lista atualizada (depois analizar)
+		projeto.setCapitulos(capitulosAtualizados);
 	}
 	
+	// TODO Consertar o método pois não esta mais usando atributos de sessão 
 	public String salvar() {
 		/*O projeto precisa de um grupo assossiado */
 		grupo = (Grupo) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("grupoNaSessao");
@@ -40,7 +43,6 @@ public class ProjetoMBean {
 		projeto.setStatus(Status.CRIADO);
 		daoProjeto.salvar(projeto);
 		initProjeto();
-		listarProjetos();
 		return "";
 		
 	}
@@ -52,11 +54,18 @@ public class ProjetoMBean {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@PostConstruct
-	public void listarProjetos(){
-		Grupo gp = (Grupo) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("grupoNaSessao");
+	public List<Projeto> listarProjetos(Long idgrupo){
 		EntityManager manager = daoProjeto.getEntityManager();
-		listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", gp).getResultList();
+		return listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", idgrupo).getResultList();
+	}
+	
+	/** Gambiarra para atualizar a lista de capítulo que o Hibernate fez o favor de trazer sempre desatualizado */
+	@SuppressWarnings("unchecked")
+	public List<Capitulo> listarCapitulosDoProjeto(Long idProjeto){
+		GenericDAO<Capitulo> daoCapitulo = new GenericDAO<>();
+		Projeto proj = new Projeto();
+		proj.setId(idProjeto);
+		return (List<Capitulo>) daoCapitulo.getEntityManager().createQuery("from Capitulo c where c.projeto.id = :idProjeto").setParameter("idProjeto", idProjeto).getResultList();
 	}
 	
 	/* usado por outros MBs */

@@ -54,11 +54,7 @@ public class CapituloMBean {
 			projeto.setStatus(Status.EM_ANDAMENTO);
 			daoProjeto.salvar(projeto);
 		}
-		listarCapitulos();
-		ProjetoMBean projetoMBean = new ProjetoMBean();
-		projetoMBean.setIdProjeto(idProjeto);
-		projetoMBean.carregarDetalhesProjeto();
-				
+		
 		return initCapitulo();
 	}
 	

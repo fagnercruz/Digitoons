@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
+import br.com.adnavsystens.models.projeto.Projeto;
 
 
 @ManagedBean
@@ -39,6 +40,8 @@ public class GrupoMBean {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
+		List<Projeto> lista = grupo.getProjetos();
+		grupo.setProjetos(lista);
 	}
 	
 	
