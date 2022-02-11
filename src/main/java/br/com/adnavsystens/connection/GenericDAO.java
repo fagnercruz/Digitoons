@@ -10,7 +10,7 @@ public class GenericDAO<E> {
 	
 	/* Métodos CRUD (Create, Return, Update, Delete)*/
 		
-	public E salvar(E entity) {
+	public E salvar(E entity) throws Exception {
 		manager.getTransaction().begin();
 		E obj = manager.merge(entity);
 		manager.getTransaction().commit();

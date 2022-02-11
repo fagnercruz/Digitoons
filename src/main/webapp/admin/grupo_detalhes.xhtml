@@ -22,7 +22,8 @@
 	</f:metadata>
 
 
-	<!-- BARRA DE MENU -->
+	<div class="container">
+		<!-- BARRA DE MENU -->
 		<h:link value="Home" outcome="/index?faces-redirect=true" />
 	
 		<h:panelGroup rendered="#{usuarioLogado == null}">
@@ -35,6 +36,8 @@
 			<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
 		</h:form>
 	<!-- /BARRA DE MENU -->
+	
+	<p:messages showDetail="true" />
 
 	<br/>
 	
@@ -111,7 +114,8 @@
 			</h:column>
 		</h:dataTable>
 		</h:form>
-
+		
+	</div>
 
 
 

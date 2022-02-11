@@ -15,7 +15,8 @@
 
 <h:body>
 
-	<!-- BARRA DE MENU -->
+	<div class="container">
+		<!-- BARRA DE MENU -->
 		<h:link value="Home" outcome="/index?faces-redirect=true" />
 		
 		<h:panelGroup rendered="#{usuarioLogado == null}">
@@ -34,6 +35,8 @@
 		<f:metadata>
 			<f:event listener="#{grupoMBean.resetGrupoSessao}" type="preRenderView" />
 		</f:metadata>
+		
+		<p:messages showDetail="true" />
 		
 		<h2>Administração de grupos</h2>
 		
@@ -75,6 +78,7 @@
 			</h:form>
 		</h:column>
 	</h:dataTable>
+	</div>
 	
 	
 	

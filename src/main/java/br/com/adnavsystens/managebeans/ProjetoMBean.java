@@ -3,6 +3,7 @@ package br.com.adnavsystens.managebeans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -27,6 +28,9 @@ public class ProjetoMBean {
 	private Long idGrupo;
 	private List<Projeto> listaProjetos = new ArrayList<>();
 		
+	private void initProjeto() {
+		projeto = new Projeto();
+	}
 	
 	public void carregarDetalhesProjeto() {
 		Projeto auxProj = new Projeto();
@@ -45,10 +49,14 @@ public class ProjetoMBean {
 		projeto.setGrupo(grupo);
 		projeto.setStatus(Status.CRIADO);
 		projeto.setCapitulos(new ArrayList<Capitulo>()); // <-- prevenindo NPE quando cria o projeto e na exibição chama o getQtdeCapitulos
-		daoProjeto.salvar(projeto);
-		initProjeto();
+		try {
+			daoProjeto.salvar(projeto);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!", "Projeto salvo"));
+			initProjeto();
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Falha!", "Não foi possível salvar: " + e.getLocalizedMessage()));
+		}
 		return "";
-		
 	}
 	
 	public Projeto pesquisar() {
@@ -81,10 +89,6 @@ public class ProjetoMBean {
 	
 	public void excluir() {
 		daoProjeto.excluir(projeto);
-	}
-	
-	private void initProjeto() {
-		projeto = new Projeto();
 	}
 	
 	public Projeto getProjeto() {

@@ -15,18 +15,22 @@ public class TestesRelacionamentos {
 	
 	@Test
 	public void testeUsuarioLogin() {
-		Usuario user = new Usuario();
-		Login login = new Login();
-		
-		login.setUsername("admin");
-		login.setPassword("admin");
-		
-		user.setNome("Fagner Cruz");
-		user.setEmail("fagnerccruz@gmail.com");
-		
-		user = daoUsuario.salvar(user);
-		login.setUsuario(user);
-		daoLogin.salvar(login);
+		try {
+			Usuario user = new Usuario();
+			Login login = new Login();
+			
+			login.setUsername("admin");
+			login.setPassword("admin");
+			
+			user.setNome("Fagner Cruz");
+			user.setEmail("fagnerccruz@gmail.com");
+			
+			user = daoUsuario.salvar(user);
+			login.setUsuario(user);
+			daoLogin.salvar(login);
+		} catch (Exception e) {
+			e.getMessage();
+		}
 		
 		
 	}

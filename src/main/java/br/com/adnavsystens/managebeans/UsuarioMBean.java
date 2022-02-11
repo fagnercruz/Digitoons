@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,7 +24,12 @@ public class UsuarioMBean {
 	List<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	
 	public String salvar() {
-		daousuario.salvar(usuario);
+		try {
+			daousuario.salvar(usuario);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "OK!", "Usuário salvo"));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Erro!", "Não foi possível salvar:  " + e.getLocalizedMessage()));
+		}
 		usuario = new Usuario();
 //		refresh(); /* quando usar primefaces*/
 		listar();
@@ -62,7 +68,7 @@ public class UsuarioMBean {
 	// chamar esse método para atualizar datatable do primefaces
 	@SuppressWarnings("unused")
 	private void refresh() {  
-        FacesContext context = FacesContext.getCurrentInstance();  
+        FacesContext context = FacesContext.getCurrentInstance();
         Application application = context.getApplication();  
         ViewHandler viewHandler = application.getViewHandler();  
         UIViewRoot viewRoot = viewHandler.createView(context, context.getViewRoot().getViewId());  

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -30,9 +31,17 @@ public class GrupoMBean {
 		
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
-		daoGrupo.salvar(grupo);
-		grupo = new Grupo(); // limpa os campos
-		listarGruposUsuarioLogado();
+		try {
+			daoGrupo.salvar(grupo);
+			String nomegrupo = grupo.getNome();
+			grupo = new Grupo(); // limpa os campos
+			listarGruposUsuarioLogado();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso! ", nomegrupo + " foi salvo"));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro. ","Não foi possível salvar: " + e.getLocalizedMessage()));
+			e.printStackTrace();
+		}
+		
 		return "";
 	}
 

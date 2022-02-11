@@ -5,7 +5,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
-import antlr.debug.MessageAdapter;
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Login;
 import br.com.adnavsystens.models.Usuario;
@@ -40,10 +39,7 @@ public class LoginMBean {
 			manager.getTransaction().commit();
 			System.err.println(e.getMessage());
 			login = new Login();
-			FacesMessage mensagem = new FacesMessage("Login Inválido");
-			mensagem.setSeverity(FacesMessage.SEVERITY_ERROR);
-			mensagem.setDetail(e.getLocalizedMessage());
-			FacesContext.getCurrentInstance().addMessage(null, mensagem);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login inválido:", e.getLocalizedMessage()));
 			return "";
 		}
 		manager.getTransaction().commit();

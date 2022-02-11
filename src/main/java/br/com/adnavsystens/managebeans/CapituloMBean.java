@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -48,13 +49,22 @@ public class CapituloMBean {
 		
 		capitulo.setProjeto(projeto);
 		capitulo.setDataLancamento(Calendar.getInstance());
-		capitulo = daoCapitulo.salvar(capitulo);
+		try {
+			capitulo = daoCapitulo.salvar(capitulo);
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro!", "Não foi possível salvar capítulo: " + e.getLocalizedMessage()));
+		}
 		
 		if(capitulo.getId() != null) {
 			projeto.setStatus(Status.EM_ANDAMENTO);
-			daoProjeto.salvar(projeto);
+			try {
+				daoProjeto.salvar(projeto);
+			} catch (Exception e) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Erro!", "Não foi possível finalizar a operação:  " + e.getLocalizedMessage()));
+				return initCapitulo();
+			}
 		}
-		
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ok!", "Capítulo foi salvo com sucesso."));
 		return initCapitulo();
 	}
 	
