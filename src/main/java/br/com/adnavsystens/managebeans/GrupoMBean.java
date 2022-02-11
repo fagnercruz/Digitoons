@@ -40,7 +40,7 @@ public class GrupoMBean {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
-		List<Projeto> lista = grupo.getProjetos();
+		List<Projeto> lista = listarProjetosDoGrupo(idGrupo);
 		grupo.setProjetos(lista);
 	}
 	
@@ -57,6 +57,14 @@ public class GrupoMBean {
 					.setParameter("idUsuario", usuarioLogado)
 					.getResultList();
 		}
+	}
+	/** gambiarra para poder atualizar a lista de projetos após novos cadastros
+	 * 	pois o Hibernate não está fazendo bem o srviço dele
+	 * 
+	 * */
+	@SuppressWarnings("unchecked")
+	public List<Projeto> listarProjetosDoGrupo(Long idgrupo){
+		return (List<Projeto>) daoGrupo.getEntityManager().createQuery("from Projeto p where p.grupo.id = :idGrupo").setParameter("idGrupo", idgrupo).getResultList();
 	}
 	
 	public void excluir() {

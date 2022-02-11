@@ -20,6 +20,7 @@ public class ProjetoMBean {
 	private Grupo grupo = new Grupo();
 	
 	private GenericDAO<Projeto> daoProjeto = new GenericDAO<>();
+	private GenericDAO<Grupo> daoGrupo = new GenericDAO<>();
 	
 	/* atributos auxiliares */
 	private Long idProjeto;
@@ -35,12 +36,15 @@ public class ProjetoMBean {
 		projeto.setCapitulos(capitulosAtualizados);
 	}
 	
-	// TODO Consertar o método pois não esta mais usando atributos de sessão 
 	public String salvar() {
 		/*O projeto precisa de um grupo assossiado */
-		grupo = (Grupo) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("grupoNaSessao");
+		Grupo grupoAux = new Grupo();
+		idGrupo = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo"));
+		grupoAux.setId(idGrupo);
+		grupo = daoGrupo.pesquisar(grupoAux);
 		projeto.setGrupo(grupo);
 		projeto.setStatus(Status.CRIADO);
+		projeto.setCapitulos(new ArrayList<Capitulo>()); // <-- prevenindo NPE quando cria o projeto e na exibição chama o getQtdeCapitulos
 		daoProjeto.salvar(projeto);
 		initProjeto();
 		return "";
@@ -56,7 +60,7 @@ public class ProjetoMBean {
 	@SuppressWarnings("unchecked")
 	public List<Projeto> listarProjetos(Long idgrupo){
 		EntityManager manager = daoProjeto.getEntityManager();
-		return listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo = :grupo order by p.id asc").setParameter("grupo", idgrupo).getResultList();
+		return listaProjetos = (List<Projeto>) manager.createQuery("from Projeto p where p.grupo.id = :idGrupo order by p.id asc").setParameter("idGrupo", idgrupo).getResultList();
 	}
 	
 	/** Gambiarra para atualizar a lista de capítulo que o Hibernate fez o favor de trazer sempre desatualizado */

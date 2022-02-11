@@ -1,7 +1,5 @@
 package br.com.adnavsystens.models.projeto;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.CascadeType;

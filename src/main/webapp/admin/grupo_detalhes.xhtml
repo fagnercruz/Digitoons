@@ -70,7 +70,9 @@
 
 			<h:outputLabel value="" />
 			<h:panelGroup>
-				<h:commandButton type="submit" value="Salvar" action="#{projetoMBean.salvar}" styleClass="btn btn-primary" style=" margin-right:10px;" />
+				<h:commandButton type="submit" value="Salvar" action="#{projetoMBean.salvar}" styleClass="btn btn-primary" style=" margin-right:10px;">
+					<f:param id="idGrupo" name="idGrupo" value="#{grupoMBean.grupo.id}" />
+				</h:commandButton>
 				<h:commandButton type="reset" value="Limpar" styleClass="btn btn-secondary" />
 			</h:panelGroup>
 		</h:panelGrid>
@@ -99,7 +101,7 @@
 			</h:column>
 			<h:column>
 				<f:facet name="header">Status</f:facet>
-				<span class="badge badge-info">#{projeto.status.descricao}</span>
+				<span class="#{projeto.status.classeBootstrap}">#{projeto.status.descricao}</span>
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ações</f:facet>
