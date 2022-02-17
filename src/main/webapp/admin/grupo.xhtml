@@ -11,6 +11,17 @@
 	<!-- bootstrap 4.1.3 -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
 	<title>Digitoons :: Grupos</title>
+	<style type="text/css">
+	    .btn {
+	        margin-right: .5rem;
+    	}
+    	ul {
+    		list-style-type: none !important;
+    	}
+    	.mensagem{
+    		height: 10px;
+    	}
+	</style>
 </h:head>
 
 <h:body>
@@ -72,8 +83,14 @@
 		<h:column>
 			<f:facet name="header">Ações</f:facet>
 			<h:form id="formActionsGroup">
-				<h:link styleClass="btn btn-primary" value="DETALHES" outcome="grupo_detalhes" >
+				<h:link styleClass="btn btn-info" value="DETALHES" outcome="grupo_detalhes" >
 					<f:param id="idGrupo" name="idGrupo" value="#{grupo.id}" />
+				</h:link>
+				<h:link styleClass="btn btn-warning" value="Editar" outcome="grupo_detalhes" >
+					<f:param id="idGrupo2" name="idGrupo2" value="#{grupo.id}" />
+				</h:link>
+				<h:link styleClass="btn btn-danger" value="Excluir" outcome="grupo_detalhes" >
+					<f:param id="idGrupo3" name="idGrupo3" value="#{grupo.id}" />
 				</h:link>	
 			</h:form>
 		</h:column>

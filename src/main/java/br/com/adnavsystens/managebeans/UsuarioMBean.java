@@ -26,9 +26,9 @@ public class UsuarioMBean {
 	public String salvar() {
 		try {
 			daousuario.salvar(usuario);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "OK!", "Usuário salvo"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário salvo"));
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Erro!", "Não foi possível salvar:  " + e.getLocalizedMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao salvar:", "Motivo: " + e.getLocalizedMessage()));
 		}
 		usuario = new Usuario();
 //		refresh(); /* quando usar primefaces*/
@@ -36,8 +36,13 @@ public class UsuarioMBean {
 		return "";
 	}
 	
-	public void buscar() {
-		
+	public String editarUsuario() {
+		Long id = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idusuario"));
+		Usuario aux = new Usuario();
+		aux.setId(id);
+		usuario = daousuario.pesquisar(aux);
+		listar();
+		return "";
 	}
 	
 	@PostConstruct
@@ -45,8 +50,18 @@ public class UsuarioMBean {
 		listaUsuarios = (List<Usuario>) daousuario.pesquisarTodos(Usuario.class);
 	}
 	
-	public void remover(Usuario u) {
-		daousuario.excluir(u);
+	public String remover() {
+		Long id = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idusuario"));
+		Usuario aux = new Usuario();
+		aux.setId(id);
+		if(daousuario.excluir(aux)) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário removido do banco de dados"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro.", "Não foi possível remover."));
+		}
+		
+		listar();
+		return "";
 	}
 
 	public Usuario getUsuario() {
@@ -65,6 +80,7 @@ public class UsuarioMBean {
 		this.listaUsuarios = listaUsuarios;
 	}
 	
+
 	// chamar esse método para atualizar datatable do primefaces
 	@SuppressWarnings("unused")
 	private void refresh() {  

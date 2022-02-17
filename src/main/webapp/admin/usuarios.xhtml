@@ -12,6 +12,17 @@
 		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		crossorigin="anonymous" />
 	<title>Digitoons :: Novo usuário</title>
+	<style type="text/css">
+	    .btn {
+	        margin-right: .5rem;
+    	}
+    	ul {
+    		list-style-type: none !important;
+    	}
+    	.mensagem{
+    		height: 10px;
+    	}
+	</style>
 </h:head>
 <h:body>
 	<div class="container">
@@ -31,11 +42,13 @@
 		</h:form>
 		<!-- /BARRA DE MENU -->
 
-		<br />
-		<br />
-		<br />
 
-		<p:messages showDetail="true" />
+		<!-- <h:messages id="msgs" showDetail="true" infoClass="alert alert-danger" warnClass="alert alert-warning" errorClass="alert alert-danger" fatalClass="alert alert-dark" />-->
+		
+			<p:messages  id="msgs" showDetail="true" showIcon="false">
+				<p:autoUpdate />
+			</p:messages>
+	
 
 
 		<h:form id="userForm" enctype="multipart/form-data">
@@ -58,27 +71,36 @@
 			</h:panelGrid>
 
 		</h:form>
-		<hr />
-		<h3>Usuários Cadastrados</h3>
-		<h:dataTable var="usuario" value="#{usuarioMBean.listaUsuarios}"
-			id="tabelaUsuarios" styleClass="table table-hover mx-auto">
-			<h:column>
-				<f:facet name="header">nº</f:facet>
-			#{usuario.id}
-		</h:column>
-			<h:column>
-				<f:facet name="header">Foto</f:facet>
-			#{usuario.caminhoDaImagem}
-		</h:column>
-			<h:column>
-				<f:facet name="header">Nome</f:facet>
-			#{usuario.nome}
-		</h:column>
-			<h:column>
-				<f:facet name="header">E-mail</f:facet>
-			#{usuario.email}
-		</h:column>
-		</h:dataTable>
+		<h:form>
+			<h:dataTable var="usuario" value="#{usuarioMBean.listaUsuarios}" id="tabelaUsuarios" styleClass="table table-hover mx-auto">
+				<f:facet name="header">Usuários cadastrados</f:facet>
+				<h:column>
+					<f:facet name="header">nº</f:facet>
+					#{usuario.id}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Foto</f:facet>
+					#{usuario.caminhoDaImagem}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Nome</f:facet>
+					#{usuario.nome}
+				</h:column>
+				<h:column>
+					<f:facet name="header">E-mail</f:facet>
+					#{usuario.email}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Ações</f:facet>
+					<h:commandButton type="button" value="Editar" action="#{usuarioMBean.editarUsuario}" styleClass="btn btn-warning" >
+						<f:param name="idusuario" value="#{usuario.id}" />
+					</h:commandButton>
+					<h:commandButton type="button" value="Excluir" action="#{usuarioMBean.remover}" styleClass="btn btn-danger" >
+						<f:param name="idusuario" value="#{usuario.id}" />
+					</h:commandButton>
+				</h:column>
+			</h:dataTable>
+		</h:form>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

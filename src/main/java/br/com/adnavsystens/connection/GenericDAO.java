@@ -29,15 +29,20 @@ public class GenericDAO<E> {
 	@SuppressWarnings("unchecked")
 	public List<E> pesquisarTodos(Class<E> entityClass) {
 		manager.getTransaction().begin();
-		List<E> list =  (List<E>) manager.createQuery("from " + entityClass.getSimpleName()).getResultList();
+		List<E> list =  (List<E>) manager.createQuery("from " + entityClass.getSimpleName() + " order by id asc").getResultList();
 		manager.getTransaction().commit();
 		return list;
 	}
 		
-	public void excluir(E Entity) {
-		manager.getTransaction().begin();
-		manager.remove(manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity)));
-		manager.getTransaction().commit();
+	public boolean excluir(E Entity) {
+		try {
+			manager.getTransaction().begin();
+			manager.remove(manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity)));
+			manager.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public EntityManager getEntityManager() {
