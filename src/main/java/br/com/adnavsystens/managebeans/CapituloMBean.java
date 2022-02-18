@@ -28,7 +28,7 @@ public class CapituloMBean {
 		capitulo = new Capitulo();
 		return "";
 	}
-	
+
 	public String salvar() {
 		/* capitulo pertence a um determinado projeto */
 		Long idProjeto = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto"));
