@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ import br.com.adnavsystens.enuns.Status;
 
 
 @Entity
-public class Projeto {
+public class Projeto implements Comparable<Projeto>{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "proj_generator")
@@ -32,8 +33,9 @@ public class Projeto {
 	private String imagemCapa;
 	private String imagemBanner;
 	private Status status;
-	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Capitulo> capitulos;
+
 	
 	
 	public Long getId() {
@@ -97,6 +99,21 @@ public class Projeto {
 		this.capitulos = capitulos;
 	}
 	
+	public String getQtdeCapitulos() {
+		return String.valueOf(capitulos.size());
+	}
 	
-	
+	@Override
+	public int compareTo(Projeto proj) {
+		if(id > proj.id) {
+			return 1;
+		}
+		
+		if(id == proj.id) {
+			return 0;
+		}
+
+		return -1;
+	}
+
 }

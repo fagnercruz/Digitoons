@@ -6,34 +6,63 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<!-- bootstrap 4.1.3 -->
+	<link rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+		crossorigin="anonymous" />
 	<title>Digitoons :: Home</title>
 </h:head>
 <h:body>
+	<div class="container">
+		<h:panelGroup rendered="#{usuarioLogado == null}">
+			<h:outputText value="Olá Visitante, Efetue o login " />
+			<h:link value="[aquí]" outcome="login" />
+		</h:panelGroup>
 
-	<h:panelGroup rendered="#{usuarioLogado == null}">
-		<h:outputText value="Olá Visitante, Efetue o login " />
-		<h:link value="[aquí]" outcome="login" />
-	</h:panelGroup>
+		<h:form id="userLogadoForm" rendered="#{usuarioLogado != null}">
+			<h:outputText value="Olá #{usuarioLogado.nome} - " />
+			<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
+		</h:form>
+		<br />
+		<br />
+		<br />
+		<h:form>
+			<h3>Página Inicial - Digitoons</h3>
+			<br />
+			<br />
+			<h5>Seções do sistema:</h5>
+			<ul>
+				<li style="color: green;">Login / início de sessão</li>
+				<li style="color: green;">Cadastro de Usuário - <h:link
+						value="Aqui" outcome="admin/usuarios" /></li>
+				<li style="color: green;">Cadastro de Grupos - <h:link
+						value="Aqui" outcome="admin/grupo" /></li>
+				<li style="color: green;">Cadastro de Projetos</li>
+				<li style="color: red;">Cadastro de Volume</li>
+				<li style="color: red;">Cadastro de capítulos</li>
+				<li style="text-decoration: none; list-style: none; color: blue;">----</li>
+				<li style="color: green;">Sistema de Upload/Download de imagens
+					- <h:link value="Aqui" outcome="teste_upload" />
+				</li>
+			</ul>
+		</h:form>
+		<h:link value="Refresh" outcome="index" />
 
-	<h:form id="userLogadoForm" rendered="#{usuarioLogado != null}">
-		<h:outputText value="Olá #{usuarioLogado.nome} - "  />
-		<h:commandLink value="[Logout]" action="#{loginMBean.logout}" />
-	</h:form>
+	</div>
 
-	<h:form>
-		<h2>Página Inicial - Digitoons</h2>
-		<h3>Seções do sistema: </h3>
-		<ul>
-			<li style="color: green;">Login / início de sessão</li>
-			<li style="color: green;">Cadastro de Usuário - <h:link value="Aqui" outcome="admin/usuarios" /></li>
-			<li style="color: green;">Cadastro de Grupos - <h:link value="Aqui" outcome="admin/grupo" /></li>
-			<li style="color: green;">Cadastro de Projetos</li>
-			<li style="color: red;">Cadastro de Volume</li>
-			<li style="color: red;">Cadastro de capítulos</li>
-			<li style="text-decoration: none; list-style: none; color: blue;">----</li>
-			<li style="color: green;">Sistema de Upload/Download de imagens - <h:link value="Aqui" outcome="teste_upload" /></li>
-		</ul>
-	</h:form>
-	<h:link value="Refresh" outcome="index" />
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
 </h:body>
 </html>

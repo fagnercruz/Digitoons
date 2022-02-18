@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
+import br.com.adnavsystens.models.projeto.Projeto;
 
 
 @ManagedBean
@@ -25,22 +27,30 @@ public class GrupoMBean {
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	private Long idGrupo;
 	
-	private Long idDeTeste;
 	
+		
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
-		daoGrupo.salvar(grupo);
-		grupo = new Grupo(); // limpa os campos
-		listarGruposUsuarioLogado();
+		try {
+			daoGrupo.salvar(grupo);
+			String nomegrupo = grupo.getNome();
+			grupo = new Grupo(); // limpa os campos
+			listarGruposUsuarioLogado();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso! ", nomegrupo + " foi salvo"));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro. ","Não foi possível salvar: " + e.getLocalizedMessage()));
+			e.printStackTrace();
+		}
+		
 		return "";
 	}
 
-	public String carregarDetalhes() {
+	public void carregarDetalhes() {
 		Grupo auxGp = new Grupo();
 		auxGp.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(auxGp);
-		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("grupoNaSessao", grupo);
-		return "grupo_detalhes";
+		List<Projeto> lista = listarProjetosDoGrupo(idGrupo);
+		grupo.setProjetos(lista);
 	}
 	
 	
@@ -56,6 +66,14 @@ public class GrupoMBean {
 					.setParameter("idUsuario", usuarioLogado)
 					.getResultList();
 		}
+	}
+	/** gambiarra para poder atualizar a lista de projetos após novos cadastros
+	 * 	pois o Hibernate não está fazendo bem o srviço dele
+	 * 
+	 * */
+	@SuppressWarnings("unchecked")
+	public List<Projeto> listarProjetosDoGrupo(Long idgrupo){
+		return (List<Projeto>) daoGrupo.getEntityManager().createQuery("from Projeto p where p.grupo.id = :idGrupo").setParameter("idGrupo", idgrupo).getResultList();
 	}
 	
 	public void excluir() {
@@ -89,14 +107,6 @@ public class GrupoMBean {
 
 	public void setIdGrupo(Long idGrupo) {
 		this.idGrupo = idGrupo;
-	}
-
-	public Long getIdDeTeste() {
-		return idDeTeste;
-	}
-
-	public void setIdDeTeste(Long idDeTeste) {
-		this.idDeTeste = idDeTeste;
 	}
 
 }

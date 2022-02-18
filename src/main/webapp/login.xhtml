@@ -11,26 +11,27 @@
 	<title>Digitoons :: Login</title>
 </h:head>
 <h:body>
-	<h:link value="Home" outcome="index?faces-redirect=true" />
+	<div class="container">
+		<h:link value="Home" outcome="index?faces-redirect=true" />
 	<h:form id="loginForm">
 		
-		<h:panelGrid columns="2">
-			<h:outputLabel value="usuario" for="campoUsuario" />
-			<h:inputText id="campoUsuario" value="#{loginMBean.login.username}" autocomplete="off" />
+		<div>
+			<h5>Usuário</h5>
+			<p:inputText id="campoUsuario" value="#{loginMBean.login.username}" autocomplete="off" />
+			<br/>
+			<h5>Senha</h5>
+			<p:password id="campoSenha" value="#{loginMBean.login.password}" />
 
-			<h:outputLabel value="senha" for="campoSenha" />
-			<h:inputSecret id="campoSenha" value="#{loginMBean.login.password}" />
-
-			<h:outputLabel />
+			<br/><br/>
 			<h:panelGroup>
-				<h:commandButton value="Entrar" action="#{loginMBean.logar}" styleClass="btn btn-primary" />
-				<h:commandButton value="Limpar" type="reset" styleClass="btn btn-warning" />
+				<p:commandButton value="Entrar" action="#{loginMBean.logar}" styleClass="ui-button-info" />
+				<p:commandButton value="Limpar" type="reset" style="margin-left:10px;" styleClass="ui-button-secondary"  />
 			</h:panelGroup>
-		</h:panelGrid>
-		<h:messages />
-		
+		</div>
 	</h:form>
-	
+	<!-- PRIMEFACES -->
+	<p:messages showDetail="true" />	
+	</div>
 	
 	
 	

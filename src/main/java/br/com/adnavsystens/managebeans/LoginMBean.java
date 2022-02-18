@@ -37,9 +37,9 @@ public class LoginMBean {
 			
 		} catch (Exception e) {
 			manager.getTransaction().commit();
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 			login = new Login();
-			FacesContext.getCurrentInstance().addMessage("loginForm:erro", new FacesMessage(e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login inválido:", e.getLocalizedMessage()));
 			return "";
 		}
 		manager.getTransaction().commit();

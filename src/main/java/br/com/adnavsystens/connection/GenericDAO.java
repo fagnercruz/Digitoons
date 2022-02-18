@@ -10,7 +10,7 @@ public class GenericDAO<E> {
 	
 	/* Métodos CRUD (Create, Return, Update, Delete)*/
 		
-	public E salvar(E entity) {
+	public E salvar(E entity) throws Exception {
 		manager.getTransaction().begin();
 		E obj = manager.merge(entity);
 		manager.getTransaction().commit();
@@ -20,19 +20,29 @@ public class GenericDAO<E> {
 	@SuppressWarnings("unchecked")
 	public E pesquisar(E entity) {
 		Object id = HibernateUtils.getPK(entity);
-		return (E) manager.find(entity.getClass(), id);
+		manager.getTransaction().begin();
+		E e = (E) manager.find(entity.getClass(), id);
+		manager.getTransaction().commit();
+		return e;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<E> pesquisarTodos(Class<E> entityClass) {
-		return (List<E>) manager.createQuery("from " + entityClass.getSimpleName())
-				.getResultList();
+		manager.getTransaction().begin();
+		List<E> list =  (List<E>) manager.createQuery("from " + entityClass.getSimpleName() + " order by id asc").getResultList();
+		manager.getTransaction().commit();
+		return list;
 	}
 		
-	public void excluir(E Entity) {
-		manager.getTransaction().begin();
-		manager.remove(manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity)));
-		manager.getTransaction().commit();
+	public boolean excluir(E Entity) {
+		try {
+			manager.getTransaction().begin();
+			manager.remove(manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity)));
+			manager.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public EntityManager getEntityManager() {

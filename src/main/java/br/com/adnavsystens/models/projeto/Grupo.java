@@ -62,6 +62,7 @@ public class Grupo {
 	}
 	
 	public List<Projeto> getProjetos() {
+		projetos.sort(null);
 		return projetos;
 	}
 	public void setProjetos(List<Projeto> projetos) {

@@ -19,7 +19,12 @@ public class UsuarioArquivoBean {
 	String caminho = ArquivoUtils.armazenaImagem("C:\\XXX\\YYY\\", arquivo);
 		if(caminho != null) {
 			usuario.setCaminhoDaImagem(caminho);
-			usuario = daoUsuario.salvar(usuario);
+			try {
+				usuario = daoUsuario.salvar(usuario);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return "";
 	}

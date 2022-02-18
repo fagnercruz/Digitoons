@@ -1,9 +1,11 @@
 package br.com.adnavsystens.managebeans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -16,25 +18,26 @@ import br.com.adnavsystens.models.projeto.Projeto;
 @ManagedBean
 public class CapituloMBean {
 
-	private Long idProjeto;
 	private Capitulo capitulo = new Capitulo();
 	private GenericDAO<Capitulo> daoCapitulo = new GenericDAO<>();
 	private GenericDAO<Projeto> daoProjeto = new GenericDAO<>();
 	private List<Capitulo> listaCapitulos = new ArrayList<>();
+
 	
 	public String initCapitulo() {
 		capitulo = new Capitulo();
 		return "";
 	}
-	
-	public String salvar() {
 
+	public String salvar() {
 		/* capitulo pertence a um determinado projeto */
+		Long idProjeto = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto"));
 		
-		if(idProjeto == null) {
+		System.out.println(idProjeto);
+		
+		if(idProjeto == null || idProjeto == 0 ) {
 			return "";
 		}
-		
 		
 		Projeto projeto = new Projeto();
 		projeto.setId(idProjeto);
@@ -45,52 +48,37 @@ public class CapituloMBean {
 		}
 		
 		capitulo.setProjeto(projeto);
-		capitulo = daoCapitulo.salvar(capitulo);
+		capitulo.setDataLancamento(Calendar.getInstance());
+		try {
+			capitulo = daoCapitulo.salvar(capitulo);
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro!", "Não foi possível salvar capítulo: " + e.getLocalizedMessage()));
+		}
 		
 		if(capitulo.getId() != null) {
 			projeto.setStatus(Status.EM_ANDAMENTO);
-			daoProjeto.salvar(projeto);
+			try {
+				daoProjeto.salvar(projeto);
+			} catch (Exception e) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Erro!", "Não foi possível finalizar a operação:  " + e.getLocalizedMessage()));
+				return initCapitulo();
+			}
 		}
-		
-		return "";
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Ok!", "Capítulo foi salvo com sucesso."));
+		return initCapitulo();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void listarCapitulos() {
 		EntityManager manager = daoCapitulo.getEntityManager();
 		
-		listaCapitulos = (List<Capitulo>) manager.createQuery("from Capitulo c where c.projeto = :projeto")
+		listaCapitulos = (List<Capitulo>) manager.createQuery("from Capitulo c where c.projeto = :projeto order by c.id asc")
 			.setParameter("projeto", (Projeto) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("projetoSessao"))
 			.getResultList();
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public Long getIdProjeto() {
-		return idProjeto;
-	}
-	public void setIdProjeto(Long idProjeto) {
-		this.idProjeto = idProjeto;
-	}
 	public Capitulo getCapitulo() {
 		return capitulo;
 	}

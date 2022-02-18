@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,15 +24,25 @@ public class UsuarioMBean {
 	List<Usuario> listaUsuarios = new ArrayList<Usuario>();
 	
 	public String salvar() {
-		daousuario.salvar(usuario);
+		try {
+			daousuario.salvar(usuario);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário salvo"));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao salvar:", "Motivo: " + e.getLocalizedMessage()));
+		}
 		usuario = new Usuario();
 //		refresh(); /* quando usar primefaces*/
 		listar();
 		return "";
 	}
 	
-	public void buscar() {
-		
+	public String editarUsuario() {
+		Long id = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idusuario"));
+		Usuario aux = new Usuario();
+		aux.setId(id);
+		usuario = daousuario.pesquisar(aux);
+		listar();
+		return "";
 	}
 	
 	@PostConstruct
@@ -39,8 +50,18 @@ public class UsuarioMBean {
 		listaUsuarios = (List<Usuario>) daousuario.pesquisarTodos(Usuario.class);
 	}
 	
-	public void remover(Usuario u) {
-		daousuario.excluir(u);
+	public String remover() {
+		Long id = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idusuario"));
+		Usuario aux = new Usuario();
+		aux.setId(id);
+		if(daousuario.excluir(aux)) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário removido do banco de dados"));
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro.", "Não foi possível remover."));
+		}
+		
+		listar();
+		return "";
 	}
 
 	public Usuario getUsuario() {
@@ -59,10 +80,11 @@ public class UsuarioMBean {
 		this.listaUsuarios = listaUsuarios;
 	}
 	
+
 	// chamar esse método para atualizar datatable do primefaces
 	@SuppressWarnings("unused")
 	private void refresh() {  
-        FacesContext context = FacesContext.getCurrentInstance();  
+        FacesContext context = FacesContext.getCurrentInstance();
         Application application = context.getApplication();  
         ViewHandler viewHandler = application.getViewHandler();  
         UIViewRoot viewRoot = viewHandler.createView(context, context.getViewRoot().getViewId());  
