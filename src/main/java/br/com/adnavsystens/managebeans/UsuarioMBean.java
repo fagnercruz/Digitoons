@@ -14,8 +14,9 @@ import javax.faces.context.FacesContext;
 
 import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
+import br.com.adnavsystens.utils.MensagensUtils;
 
-@ViewScoped
+//@ViewScoped
 @ManagedBean
 public class UsuarioMBean {
 
@@ -26,9 +27,9 @@ public class UsuarioMBean {
 	public String salvar() {
 		try {
 			daousuario.salvar(usuario);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário salvo"));
+			MensagensUtils.addMensagemSucesso("Sucesso", "usuário salvo.");
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Falha ao salvar:", "Motivo: " + e.getLocalizedMessage()));
+			MensagensUtils.addMensagemErro("Falha", "Não foi possível salvar usuário: " + e.getLocalizedMessage());
 		}
 		usuario = new Usuario();
 //		refresh(); /* quando usar primefaces*/
@@ -54,10 +55,11 @@ public class UsuarioMBean {
 		Long id = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idusuario"));
 		Usuario aux = new Usuario();
 		aux.setId(id);
-		if(daousuario.excluir(aux)) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso:", "Usuário removido do banco de dados"));
+		aux = daousuario.excluir(aux);
+		if(aux != null) {
+			MensagensUtils.addMensagemAlerta("Atenção", "Usuário foi removido do sistema com sucesso ");
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro.", "Não foi possível remover."));
+			MensagensUtils.addMensagemErro("Erro", "Não foi possível remover");
 		}
 		
 		listar();

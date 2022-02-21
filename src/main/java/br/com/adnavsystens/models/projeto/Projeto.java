@@ -1,5 +1,6 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -33,8 +34,8 @@ public class Projeto implements Comparable<Projeto>{
 	private String imagemCapa;
 	private String imagemBanner;
 	private Status status;
-	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Capitulo> capitulos;
+	@OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private List<Capitulo> capitulos = new ArrayList<Capitulo>();
 
 	
 	
@@ -96,7 +97,8 @@ public class Projeto implements Comparable<Projeto>{
 		return capitulos;
 	}
 	public void setCapitulos(List<Capitulo> capitulos) {
-		this.capitulos = capitulos;
+		this.capitulos.clear();
+		this.capitulos.addAll(capitulos);
 	}
 	
 	public String getQtdeCapitulos() {

@@ -11,7 +11,9 @@ public class GenericDAO<E> {
 	/* Métodos CRUD (Create, Return, Update, Delete)*/
 		
 	public E salvar(E entity) throws Exception {
-		manager.getTransaction().begin();
+		if(!manager.getTransaction().isActive()) {
+			manager.getTransaction().begin();
+		}
 		E obj = manager.merge(entity);
 		manager.getTransaction().commit();
 		return obj;
@@ -20,7 +22,9 @@ public class GenericDAO<E> {
 	@SuppressWarnings("unchecked")
 	public E pesquisar(E entity) {
 		Object id = HibernateUtils.getPK(entity);
-		manager.getTransaction().begin();
+		if(!manager.getTransaction().isActive()) {
+			manager.getTransaction().begin();
+		}
 		E e = (E) manager.find(entity.getClass(), id);
 		manager.getTransaction().commit();
 		return e;
@@ -28,26 +32,47 @@ public class GenericDAO<E> {
 	
 	@SuppressWarnings("unchecked")
 	public List<E> pesquisarTodos(Class<E> entityClass) {
-		manager.getTransaction().begin();
+		if(!manager.getTransaction().isActive()) {
+			manager.getTransaction().begin();
+		}
 		List<E> list =  (List<E>) manager.createQuery("from " + entityClass.getSimpleName() + " order by id asc").getResultList();
 		manager.getTransaction().commit();
 		return list;
 	}
 		
-	public boolean excluir(E Entity) {
+	
+	/**
+	 * Método para remoção em cascata de uma entidade e seus relacionamentos
+	 * 
+	 * @return Entidade excluída ou null para erro
+	 * @param
+	 * @author Fagner Cruz
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public E excluir(E Entity) {
 		try {
-			manager.getTransaction().begin();
-			manager.remove(manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity)));
+			if(!manager.getTransaction().isActive()) {
+				manager.getTransaction().begin();
+			}
+			E e = (E) manager.find(Entity.getClass(), (Object) HibernateUtils.getPK(Entity));
+			manager.remove(e);
 			manager.getTransaction().commit();
-			return true;
+			return e;
 		} catch (Exception e) {
-			return false;
-		}
+			System.err.println(e.getLocalizedMessage());
+			return null;
+		} 
 	}
 	
 	public EntityManager getEntityManager() {
 		return manager;
 	}
+
+	public static boolean isTransacaoAtiva() {
+		return manager.getTransaction().isActive();
+	}
+	
 	
 	
 }

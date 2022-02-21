@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -13,6 +12,7 @@ import br.com.adnavsystens.connection.GenericDAO;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
+import br.com.adnavsystens.utils.MensagensUtils;
 
 
 @ManagedBean
@@ -31,14 +31,19 @@ public class GrupoMBean {
 		
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
+		String msg = "";
 		try {
+			if(grupo.getId() != null) {
+				msg = "O grupo " + grupo.getNome() + " foi atualizado com sucesso";
+			}else {
+				msg = "O grupo " + grupo.getNome() + " foi salvo com sucesso";
+			}
 			daoGrupo.salvar(grupo);
-			String nomegrupo = grupo.getNome();
-			grupo = new Grupo(); // limpa os campos
+			grupo = new Grupo();
 			listarGruposUsuarioLogado();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso! ", nomegrupo + " foi salvo"));
+			MensagensUtils.addMensagemSucesso("Sucesso", msg);
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro. ","Não foi possível salvar: " + e.getLocalizedMessage()));
+			MensagensUtils.addMensagemErro("Erro", "Não foi possível salvar: " + e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 		
@@ -51,6 +56,26 @@ public class GrupoMBean {
 		grupo = daoGrupo.pesquisar(auxGp);
 		List<Projeto> lista = listarProjetosDoGrupo(idGrupo);
 		grupo.setProjetos(lista);
+	}
+	
+	public String editarGrupo() {
+		Grupo aux = new Grupo();
+		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
+		grupo = daoGrupo.pesquisar(aux);
+		return "";
+	}
+	
+	public String excluirGrupo() {
+		Grupo aux = new Grupo();
+		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
+		aux = daoGrupo.excluir(aux);
+		if(aux != null) {
+			MensagensUtils.addMensagemAlerta("Atenção", "O grupo " + aux.getNome() +" foi excluído com sucesso");
+		} else {
+			MensagensUtils.addMensagemErro("Erro", "Não foi possível excluir o grupo");
+		}
+		listarGruposUsuarioLogado();
+		return "";
 	}
 	
 	
@@ -67,8 +92,10 @@ public class GrupoMBean {
 					.getResultList();
 		}
 	}
-	/** gambiarra para poder atualizar a lista de projetos após novos cadastros
-	 * 	pois o Hibernate não está fazendo bem o srviço dele
+
+	/** 
+	 * gambiarra para poder atualizar a lista de projetos após novos cadastros
+	 * pois o Hibernate não está fazendo bem o serviço dele.
 	 * 
 	 * */
 	@SuppressWarnings("unchecked")

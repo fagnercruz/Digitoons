@@ -18,9 +18,7 @@
     	ul {
     		list-style-type: none !important;
     	}
-    	.mensagem{
-    		height: 10px;
-    	}
+    	
 	</style>
 </h:head>
 
@@ -47,7 +45,7 @@
 			<f:event listener="#{grupoMBean.resetGrupoSessao}" type="preRenderView" />
 		</f:metadata>
 		
-		<p:messages showDetail="true" />
+		<p:messages showDetail="true" showIcon="false" />
 		
 		<h2>Administração de grupos</h2>
 		
@@ -61,7 +59,7 @@
 			<h:outputLabel for="imgLogo" value="Logomarca:" />
 			<h:inputText id="imgLogo" value="#{grupoMBean.grupo.imagemLogo}"  />
 				
-			<h:outputLabel value="" />
+			<h:inputHidden id="idgrupo" value="#{grupoMBean.grupo.id}" />
 			<h:panelGroup>
 				<h:commandButton type="submit" value="Salvar" action="#{grupoMBean.salvar}" style="margin-right: 10px;"/>
 				<h:commandButton type="reset" value="Limpar" />
@@ -83,15 +81,15 @@
 		<h:column>
 			<f:facet name="header">Ações</f:facet>
 			<h:form id="formActionsGroup">
-				<h:link styleClass="btn btn-info" value="DETALHES" outcome="grupo_detalhes" >
-					<f:param id="idGrupo" name="idGrupo" value="#{grupo.id}" />
+				<h:link styleClass="btn btn-info" value="Detalhes" outcome="grupo_detalhes" >
+					<f:param id="infoIdgrupo" name="detalharGrupo" value="#{grupo.id}" />
 				</h:link>
-				<h:link styleClass="btn btn-warning" value="Editar" outcome="grupo_detalhes" >
-					<f:param id="idGrupo2" name="idGrupo2" value="#{grupo.id}" />
-				</h:link>
-				<h:link styleClass="btn btn-danger" value="Excluir" outcome="grupo_detalhes" >
-					<f:param id="idGrupo3" name="idGrupo3" value="#{grupo.id}" />
-				</h:link>	
+				<h:commandLink styleClass="btn btn-warning" value="Editar" action="#{grupoMBean.editarGrupo}" >
+					<f:param name="idGrupo" value="#{grupo.id}" />
+				</h:commandLink>
+				<h:commandLink styleClass="btn btn-danger" value="Excluir" action="#{grupoMBean.excluirGrupo}" >
+					<f:param name="idGrupo" value="#{grupo.id}" />
+				</h:commandLink>	
 			</h:form>
 		</h:column>
 	</h:dataTable>

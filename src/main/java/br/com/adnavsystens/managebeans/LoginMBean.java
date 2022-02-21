@@ -21,8 +21,9 @@ public class LoginMBean {
 		EntityManager manager = daoLogin.getEntityManager();
 		
 		try {
-			
-			manager.getTransaction().begin();
+			if(!GenericDAO.isTransacaoAtiva()) {
+				manager.getTransaction().begin();
+			}
 			Login loginRetornado = (Login) manager.createQuery("from " + login.getClass().getSimpleName() +" where username = :usuario and password = :senha" )
 				.setParameter("usuario", login.getUsername())
 				.setParameter("senha", login.getPassword())
@@ -40,8 +41,12 @@ public class LoginMBean {
 			System.err.println(e.getMessage());
 			login = new Login();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login inválido:", e.getLocalizedMessage()));
+			if(manager.getTransaction().isActive()) {
+				manager.close();
+			}
 			return "";
-		}
+		} 
+
 		manager.getTransaction().commit();
 
 		
@@ -52,6 +57,9 @@ public class LoginMBean {
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("usuarioLogado");
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 //		String context = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+		if(GenericDAO.isTransacaoAtiva()) {
+			daoLogin.getEntityManager().close();
+		}
 		return "/index?faces-redirect=true";
 		
 	}

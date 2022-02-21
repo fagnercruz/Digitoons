@@ -11,13 +11,22 @@
 	<!-- bootstrap 4.1.3 -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
 	<title>Digitoons :: Detalhes</title>
+	<style type="text/css">
+	    .btn {
+	        margin-right: .5rem;
+    	}
+    	ul {
+    		list-style-type: none !important;
+    	}
+    	
+	</style>
 </h:head>
 
 
 <h:body>
 
 	<f:metadata>
-		<f:viewParam name="idGrupo" converter="javax.faces.Long" value="#{grupoMBean.idGrupo}" />
+		<f:viewParam name="detalharGrupo" converter="javax.faces.Long" value="#{grupoMBean.idGrupo}" />
 		<f:event listener="#{grupoMBean.carregarDetalhes}" type="preRenderView" />
 	</f:metadata>
 
@@ -108,9 +117,13 @@
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ações</f:facet>
-					<h:link type="button" value="Link" outcome="projeto_detalhes" styleClass="btn btn-primary">
+					<h:link type="button" value="Detalhes" outcome="projeto_detalhes" styleClass="btn btn-info">
 						<f:param id="idProjeto" name="idProjeto" value="#{projeto.id}" />
 					</h:link>
+					<h:commandLink value="Editar" styleClass="btn btn-warning">
+					</h:commandLink>
+					<h:commandLink value="Excluir" styleClass="btn btn-danger">
+					</h:commandLink>
 			</h:column>
 		</h:dataTable>
 		</h:form>

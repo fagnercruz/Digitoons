@@ -1,5 +1,6 @@
 package br.com.adnavsystens.models.projeto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,8 +28,8 @@ public class Grupo {
 	private String nome;
 	private String slogan;
 	private String imagemLogo;
-	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL)
-	private List<Projeto> projetos;
+	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Projeto> projetos = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -66,7 +67,8 @@ public class Grupo {
 		return projetos;
 	}
 	public void setProjetos(List<Projeto> projetos) {
-		this.projetos = projetos;
+		this.projetos.clear();
+		this.projetos.addAll(projetos);
 	}
 	@Override
 	public String toString() {
