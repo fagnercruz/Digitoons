@@ -80,7 +80,10 @@
 			<h:outputLabel for="imgBanner" value="Banner:  " />
 			<h:inputText id="imgBanner" value="#{projetoMBean.projeto.imagemBanner}" />
 
-			<h:outputLabel value="" />
+			<!-- campos preenchidos quando é edição -->
+			<h:inputHidden id="idProjeto" value="#{projetoMBean.projeto.id}" />
+			<h:inputHidden id="status" value="#{projetoMBean.projeto.status}" />
+
 			<h:panelGroup>
 				<h:commandButton type="submit" value="Salvar" action="#{projetoMBean.salvar}" styleClass="btn btn-primary" style=" margin-right:10px;">
 					<f:param id="idGrupo" name="idGrupo" value="#{grupoMBean.grupo.id}" />
@@ -93,39 +96,42 @@
 	<br/>
 
 		<h:form>
-		<h:dataTable var="projeto" value="#{grupoMBean.grupo.projetos}" id="projDataTable" styleClass="table table-hover mx-auto" >
-			<f:facet name="header">Projetos de <h:outputText value="#{grupoMBean.grupo.nome}" /> </f:facet>
-			<h:column>
-				<f:facet name="header">Título</f:facet>
-				#{projeto.titulo}
-			</h:column>
-			<h:column>
-				<f:facet name="header">Autor</f:facet>
-				#{projeto.autor}
-			</h:column>
-			<h:column>
-				<f:facet name="header">Cap.Publicados</f:facet>
-				<h:outputLabel value="#{projeto.qtdeCapitulos}" />
-			</h:column>
-			<h:column>
-				<f:facet name="header">Ult. Atualiz.</f:facet>
-				<h:outputText value="" id="dtAtt" />
-			</h:column>
-			<h:column>
-				<f:facet name="header">Status</f:facet>
-				<span class="#{projeto.status.classeBootstrap}">#{projeto.status.descricao}</span>
-			</h:column>
-			<h:column>
-				<f:facet name="header">Ações</f:facet>
-					<h:link type="button" value="Detalhes" outcome="projeto_detalhes" styleClass="btn btn-info">
-						<f:param id="idProjeto" name="idProjeto" value="#{projeto.id}" />
-					</h:link>
-					<h:commandLink value="Editar" styleClass="btn btn-warning">
-					</h:commandLink>
-					<h:commandLink value="Excluir" styleClass="btn btn-danger">
-					</h:commandLink>
-			</h:column>
-		</h:dataTable>
+			<h:dataTable var="projeto" value="#{grupoMBean.grupo.projetos}" id="projDataTable" styleClass="table table-hover mx-auto" >
+				<f:facet name="header">Projetos de <h:outputText value="#{grupoMBean.grupo.nome}" /> </f:facet>
+				<h:column>
+					<f:facet name="header">Título</f:facet>
+					#{projeto.titulo}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Autor</f:facet>
+					#{projeto.autor}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Cap.Publicados</f:facet>
+					<h:outputLabel value="#{projeto.qtdeCapitulos}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Ult. Atualiz.</f:facet>
+					<h:outputText value="" id="dtAtt" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">Status</f:facet>
+					<span class="#{projeto.status.classeBootstrap}">#{projeto.status.descricao}</span>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Ações</f:facet>
+						<h:link type="button" value="Detalhes" styleClass="btn btn-info" outcome="projeto_detalhes">
+							<f:param id="idProjeto" name="idProjeto" value="#{projeto.id}" />
+						</h:link>
+						<h:commandButton value="Editar" styleClass="btn btn-warning" action="#{projetoMBean.editarProjeto}">
+							<f:param name="idProjeto" value="#{projeto.id}" />
+							<f:setPropertyActionListener value="#{projeto.id}" target="#{projetoMBean.idProjeto}" />
+						</h:commandButton>
+						<h:commandButton value="Excluir" styleClass="btn btn-danger" action="#{projetoMBean.excluirProjeto}">
+							<f:param name="idProjeto" value="#{projeto.id}" />
+						</h:commandButton>
+				</h:column>
+			</h:dataTable>
 		</h:form>
 		
 	</div>

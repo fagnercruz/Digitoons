@@ -13,6 +13,7 @@ import br.com.adnavsystens.enuns.Status;
 import br.com.adnavsystens.models.projeto.Capitulo;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
+import br.com.adnavsystens.utils.MensagensUtils;
 
 @ManagedBean
 public class ProjetoMBean {
@@ -32,6 +33,9 @@ public class ProjetoMBean {
 		projeto = new Projeto();
 	}
 	
+	/**
+	 *Método chamado para popular os dados do Projeto na view grupo_detalhes.jsf
+	 */
 	public void carregarDetalhesProjeto() {
 		Projeto auxProj = new Projeto();
 		auxProj.setId(idProjeto);
@@ -40,15 +44,43 @@ public class ProjetoMBean {
 		projeto.setCapitulos(capitulosAtualizados);
 	}
 	
+	public String editarProjeto() {
+		Projeto aux = new Projeto();
+		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
+		projeto = daoProjeto.pesquisar(aux);
+		return "";
+	}
+	
+	public String excluirProjeto() {
+		Projeto aux = new Projeto();
+		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
+		aux = daoProjeto.excluir(aux);
+		if(aux != null) {
+			MensagensUtils.addMensagemAlerta("Atenção", "O projeto " + aux.getTitulo() + " foi removido completamente" );
+		} else {
+			MensagensUtils.addMensagemErro("Erro", "Não foi possível remover o projeto");
+		}
+		
+		return "";
+	}
+	
 	public String salvar() {
-		/*O projeto precisa de um grupo assossiado */
+		
 		Grupo grupoAux = new Grupo();
 		idGrupo = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo"));
 		grupoAux.setId(idGrupo);
 		grupo = daoGrupo.pesquisar(grupoAux);
-		projeto.setGrupo(grupo);
-		projeto.setStatus(Status.CRIADO);
-		projeto.setCapitulos(new ArrayList<Capitulo>()); // <-- prevenindo NPE quando cria o projeto e na exibição chama o getQtdeCapitulos
+
+		// se o projeto ja existe (id != null) so pega os dado do form (estado do bean) e joga no dao
+		if(projeto.getId() == null) { 
+			projeto.setGrupo(grupo);
+			projeto.setStatus(Status.CRIADO);
+			projeto.setCapitulos(new ArrayList<Capitulo>()); // <-- prevenindo NPE quando cria o projeto e na exibição chama o getQtdeCapitulos
+		} else {
+			projeto.setGrupo(grupo);
+			projeto.setCapitulos(listarCapitulosDoProjeto(projeto.getId()));
+		}
+		
 		try {
 			daoProjeto.salvar(projeto);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!", "Projeto salvo"));
