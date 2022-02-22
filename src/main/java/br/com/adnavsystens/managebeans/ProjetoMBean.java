@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
@@ -16,6 +17,7 @@ import br.com.adnavsystens.models.projeto.Projeto;
 import br.com.adnavsystens.utils.MensagensUtils;
 
 @ManagedBean
+@ViewScoped
 public class ProjetoMBean {
 
 	private Projeto projeto = new Projeto();
@@ -119,7 +121,7 @@ public class ProjetoMBean {
 		GenericDAO<Capitulo> daoCapitulo = new GenericDAO<>();
 		Projeto proj = new Projeto();
 		proj.setId(idProjeto);
-		return (List<Capitulo>) daoCapitulo.getEntityManager().createQuery("from Capitulo c where c.projeto.id = :idProjeto").setParameter("idProjeto", idProjeto).getResultList();
+		return (List<Capitulo>) daoCapitulo.getEntityManager().createQuery("from Capitulo c where c.projeto.id = :idProjeto order by c.id asc").setParameter("idProjeto", idProjeto).getResultList();
 	}
 	
 	/* usado por outros MBs */

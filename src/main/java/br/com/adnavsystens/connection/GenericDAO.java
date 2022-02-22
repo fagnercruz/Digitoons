@@ -19,6 +19,11 @@ public class GenericDAO<E> {
 		return obj;
 	}
 	
+	/**
+	 * Retorna o Objeto pesquisado pelo seu PK
+	 * @return O Objeto pesquisado ou NULL
+	 * @param
+	 * */
 	@SuppressWarnings("unchecked")
 	public E pesquisar(E entity) {
 		Object id = HibernateUtils.getPK(entity);
