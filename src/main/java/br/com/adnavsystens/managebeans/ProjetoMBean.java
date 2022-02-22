@@ -52,15 +52,25 @@ public class ProjetoMBean {
 	}
 	
 	public String excluirProjeto() {
+				
 		Projeto aux = new Projeto();
-		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
-		aux = daoProjeto.excluir(aux);
-		if(aux != null) {
-			MensagensUtils.addMensagemAlerta("Atenção", "O projeto " + aux.getTitulo() + " foi removido completamente" );
-		} else {
-			MensagensUtils.addMensagemErro("Erro", "Não foi possível remover o projeto");
-		}
+		Grupo auxGrupo = new Grupo();
 		
+		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
+		aux = daoProjeto.pesquisar(aux);
+		
+		auxGrupo.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
+		auxGrupo = daoGrupo.pesquisar(auxGrupo);
+		
+		// remove o projeto da lista e atualiza o pai para a remoção acontecer em cascata
+		if(auxGrupo.getProjetos().remove(aux)) {
+			try {
+				daoGrupo.salvar(auxGrupo);
+				MensagensUtils.addMensagemAlerta("Atenção", "O projeto " + aux.getTitulo() + " foi removido completamente" );
+			} catch (Exception e) {
+				MensagensUtils.addMensagemErro("Erro", "Não foi possível remover: " + e.getLocalizedMessage());
+			}
+		}
 		return "";
 	}
 	

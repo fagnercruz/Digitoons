@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +29,7 @@ public class Grupo {
 	private String nome;
 	private String slogan;
 	private String imagemLogo;
-	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "grupo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<Projeto> projetos = new ArrayList<>();
 	
 	public Long getId() {

@@ -129,6 +129,7 @@
 						</h:commandButton>
 						<h:commandButton value="Excluir" styleClass="btn btn-danger" action="#{projetoMBean.excluirProjeto}">
 							<f:param name="idProjeto" value="#{projeto.id}" />
+							<f:param name="idGrupo" value="#{projeto.grupo.id}" />
 						</h:commandButton>
 				</h:column>
 			</h:dataTable>
