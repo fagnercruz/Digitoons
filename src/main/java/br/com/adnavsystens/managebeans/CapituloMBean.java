@@ -104,6 +104,29 @@ public class CapituloMBean {
 		return "";
 	}
 	
+	public String excluirCapitulo() {
+		
+		Capitulo cap = new Capitulo();
+		Projeto proj = new Projeto();
+		
+		cap.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idCapitulo")));
+		cap = daoCapitulo.pesquisar(cap);
+		
+		proj.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
+		proj = daoProjeto.pesquisar(proj);
+		
+		if(cap != null && proj != null ) {
+			if(proj.getCapitulos().remove(cap)) {
+				MensagensUtils.addMensagemSucesso("Sucesso", "Capítulo foi removido do projeto");
+				return "";
+			}
+			MensagensUtils.addMensagemErro("Erro", "Não foi possível remover");
+			return "";
+		}
+		MensagensUtils.addMensagemErro("Erro", "Parâmetros para remoção inválidos");
+		return "";
+	}
+	
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void listarCapitulos() {
