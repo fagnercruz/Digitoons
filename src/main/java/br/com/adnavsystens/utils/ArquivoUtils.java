@@ -5,8 +5,10 @@ import java.io.FileOutputStream;
 
 import org.apache.catalina.core.ApplicationPart;
 
+import br.com.adnavsystens.enuns.FilePaths;
+
 /**
- * Classe utilitária para gravação e recuparação de arquivos
+ * Classe utilitária manipulação de arquivos
  * 
  * @author Fagner Cruz
  * 
@@ -17,40 +19,117 @@ public abstract class ArquivoUtils {
 	 * Método que salva uma imagem no disco e retorna o caminho absoluto do mesmo ou
 	 * null em caso de erro
 	 * 
-	 * @param caminhoPasta
-	 * @param arquivo
+	 * @param
+	 * @throws Exception 
 	 * 
-	 * */
-	public static String armazenaImagem(String caminhoPasta, ApplicationPart arquivo) {
+	 */
+	public static String salvarArquivo(ApplicationPart arquivo, FilePaths path) throws Exception {
 
 		StringBuilder caminho = new StringBuilder();
-		caminho.append(caminhoPasta);
-		if (arquivo != null && arquivo.getSubmittedFileName() != null) {
-			try {
-				// completa o path
-				caminho.append(arquivo.getSubmittedFileName());
+		caminho.append(FilePaths.ROOT_PATH.getCaminho());
+		caminho.append(path.getCaminho());
 
-				// transforma o arquivo em um array de bytes
-				byte[] arrayBytes = new byte[(int) arquivo.getSize()];
-				arquivo.getInputStream().read(arrayBytes);
+		File f = new File(caminho.toString());
 
-				// Cria um link para o arquivo no disco
-				File f = new File(caminho.toString());
+		// Montando a estrutura de pastas caso não exista
+		if (criaDiretorios(f, caminho)) {
+			// continua o processo
+			if (arquivo != null && arquivo.getSubmittedFileName() != null) {
+				try {
+					//verifica a existencia do arquivo e renomeia se necessario
+					String nomeAtualizado = verificaNomeDoArquivo(caminho.toString(), arquivo.getSubmittedFileName());
+					
+					// completa o path
+					caminho.append(nomeAtualizado);
 
-				// Cria o FOS para gravar o array no arquivo
-				FileOutputStream fos = new FileOutputStream(f);
+					// transforma o arquivo em um array de bytes
+					byte[] arrayBytes = new byte[(int) arquivo.getSize()];
+					arquivo.getInputStream().read(arrayBytes);
 
-				// Grava o array no fos (e consequentemente no arquivo setado no file)
-				fos.write(arrayBytes);
-				fos.close();
+					// Cria um link para o arquivo no disco
+					f = new File(caminho.toString());
+					
+				
 
-			} catch (Exception e) {
-				e.printStackTrace();
+					// Cria o FOS para gravar o array no arquivo
+					FileOutputStream fos = new FileOutputStream(f);
+
+					// Grava o array no fos (e consequentemente no arquivo setado no file)
+					fos.write(arrayBytes);
+					fos.close();
+					
+					return caminho.toString();
+
+				} catch (Exception e) {
+					throw new Exception(e.getMessage());
+				}
+
+			} else {
+				// aborta o processo
 				return null;
-			} 
+			}
 		}
-		return caminho.toString();
+		return null;
+	}
 
-	}// armazenaImagem()
-
+	private static boolean criaDiretorios(File f, StringBuilder caminho) {
+		if (!f.exists()) {
+			try {
+				f.mkdirs();
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private static String verificaNomeDoArquivo(String path, String nomeArquivo) throws Exception {
+		
+		String nomeAtualizado = nomeArquivo;
+		File arquivo = new File(path + nomeArquivo);
+		
+		//testa a principio e o nome do arquivo é valido
+		if(nomeAtualizado.split("\\.").length > 2) {
+			throw new Exception("O nome do arquivo é inválido: Dois ou mais '.'");
+		}
+		
+		int i = 1;
+		while(arquivo.exists()) {
+			nomeAtualizado = renameFile(nomeAtualizado, i);
+			arquivo = new File(path + nomeAtualizado);
+			i++;
+		}
+		
+		return nomeAtualizado;
+	}
+	
+	private static String renameFile(String nomeArquivo, int i) throws Exception {
+		String[] arqName = nomeArquivo.split("\\.");
+		
+		// TODO analisar se esse trecho abaixo é necessário pois já existe essa mesma validação dentro de verificaNomeDoArquivo()
+		if(arqName.length > 2) {
+			throw new Exception("O nome do arquivo é inválido: Dois ou mais '.'");
+		}
+		
+		//limpa possiveis renomeações anteriores para atualizar novamente
+		if(arqName.length == 2) {
+			// OK
+			if(arqName[0].endsWith(")")) {
+				String[] nomeOriginal = arqName[0].split("\\(");
+				arqName[0] = nomeOriginal[0];
+			}
+		}
+		
+		String nome = arqName[0] + "(" + i + ")";
+		String extensao = "." + arqName[arqName.length - 1]; // previne pegar a extensao corretamente mesmo q o nome tenha pontos
+		
+		return nome + extensao;
+	}
+	
+	public static boolean excluirArquivo(String path) {
+		// TODO criar rotina para exclusão de arquivos.
+		
+		return false;
+	}
 }

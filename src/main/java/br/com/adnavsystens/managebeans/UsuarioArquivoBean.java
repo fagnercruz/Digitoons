@@ -5,8 +5,10 @@ import javax.faces.bean.ManagedBean;
 import org.apache.catalina.core.ApplicationPart;
 
 import br.com.adnavsystens.connection.GenericDAO;
+import br.com.adnavsystens.enuns.FilePaths;
 import br.com.adnavsystens.models.UsuarioArquivoModel;
 import br.com.adnavsystens.utils.ArquivoUtils;
+import br.com.adnavsystens.utils.MensagensUtils;
 
 @ManagedBean
 public class UsuarioArquivoBean {
@@ -16,7 +18,13 @@ public class UsuarioArquivoBean {
 	private ApplicationPart arquivo;
 
 	public String salvar() {
-	String caminho = ArquivoUtils.armazenaImagem("C:\\XXX\\YYY\\", arquivo);
+		try {
+			String caminho = ArquivoUtils.salvarArquivo(arquivo, FilePaths.USUARIO);
+		} catch (Exception e) {
+			MensagensUtils.addMensagemFatal("Falha", e.getLocalizedMessage());
+		}
+
+		/*
 		if(caminho != null) {
 			usuario.setCaminhoDaImagem(caminho);
 			try {
@@ -25,7 +33,7 @@ public class UsuarioArquivoBean {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		return "";
 	}
 
