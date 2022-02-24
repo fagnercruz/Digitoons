@@ -30,10 +30,12 @@ public class LoadImageServlet extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(!request.getParameter("id").isBlank()) {
-			Long id = Long.valueOf(request.getParameter("id"));
+		String id = request.getParameter("id");
+		String url = request.getParameter("url");
+		if(id != null && !id.isBlank()) {
+			Long idUser = Long.valueOf(id);
 			UsuarioArquivoModel pessoa = new UsuarioArquivoModel();
-			pessoa.setId(id);
+			pessoa.setId(idUser);
 			pessoa = (UsuarioArquivoModel) daoPessoa.pesquisar(pessoa);
 			
 			if(pessoa != null && !pessoa.getCaminhoDaImagem().isBlank()) {
@@ -46,6 +48,14 @@ public class LoadImageServlet extends HttpServlet {
 				
 				response.getOutputStream().write(array);
 			}
+		} else if (url != null && !url.isBlank()) {
+			File f = new File(url);
+			FileInputStream fis = new FileInputStream(f);
+			byte[] array = new byte[(int) f.length()];
+			fis.read(array);
+			fis.close();
+			
+			response.getOutputStream().write(array);
 		}
 	}
 

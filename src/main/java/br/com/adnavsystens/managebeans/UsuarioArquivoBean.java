@@ -17,14 +17,15 @@ public class UsuarioArquivoBean {
 	private GenericDAO<UsuarioArquivoModel> daoUsuario = new GenericDAO<UsuarioArquivoModel>();
 	private ApplicationPart arquivo;
 
+	String caminho = "";
 	public String salvar() {
 		try {
-			String caminho = ArquivoUtils.salvarArquivo(arquivo, FilePaths.USUARIO);
+			caminho = ArquivoUtils.salvarArquivo(arquivo, FilePaths.USUARIO);
 		} catch (Exception e) {
 			MensagensUtils.addMensagemFatal("Falha", e.getLocalizedMessage());
 		}
 
-		/*
+		
 		if(caminho != null) {
 			usuario.setCaminhoDaImagem(caminho);
 			try {
@@ -33,7 +34,7 @@ public class UsuarioArquivoBean {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}*/
+		}
 		return "";
 	}
 

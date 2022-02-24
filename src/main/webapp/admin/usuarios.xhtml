@@ -54,20 +54,26 @@
 		<h:form id="userForm" enctype="multipart/form-data">
 
 			<h2>Novo usuário</h2>
-			<h:panelGrid columns="2" columnClasses="p-col-6"
-				styleClass="showcase-text-align-center">
-				<h:outputLabel for="nome" value="Nome:" />
-				<h:inputText id="nome" value="#{usuarioMBean.usuario.nome}" />
-
-				<h:outputLabel for="email" value="E-mail:" />
-				<h:inputText id="email" value="#{usuarioMBean.usuario.email}" />
-
-				<h:outputLabel for="userImg" value="Foto:" />
-				<h:inputFile id="userImg" />
-
-				<h:outputLabel />
-				<h:commandButton value="Salvar" action="#{usuarioMBean.salvar}" />
-
+			<h:panelGrid columns="2">
+				<h:panelGroup id="coluna01">
+					<h:panelGrid columns="2" columnClasses="p-col-6" styleClass="showcase-text-align-center">
+						<h:outputLabel for="nome" value="Nome:" />
+						<h:inputText id="nome" value="#{usuarioMBean.usuario.nome}" />
+		
+						<h:outputLabel for="email" value="E-mail:" />
+						<h:inputText id="email" value="#{usuarioMBean.usuario.email}" />
+		
+						<h:outputLabel for="userImg" value="Foto:" />
+						<h:inputFile id="userImg" value="#{usuarioMBean.arquivo}" />
+		
+						<h:inputHidden id="idusuario" value="#{usuarioMBean.usuario.id}" />
+						<h:commandButton value="Salvar" action="#{usuarioMBean.salvar}" />
+					</h:panelGrid>
+				</h:panelGroup>
+				
+				<h:panelGroup id="coluna02">
+					<h:graphicImage id="imagemUsuario" width="200" height="200" value="/LoadImageServlet?url=#{usuarioMBean.usuario.caminhoDaImagem}" rendered="#{usuarioMBean.imageExist}" />				
+				</h:panelGroup>
 			</h:panelGrid>
 
 		</h:form>
@@ -80,7 +86,7 @@
 				</h:column>
 				<h:column>
 					<f:facet name="header">Foto</f:facet>
-					#{usuario.caminhoDaImagem}
+					<h:graphicImage value="/LoadImageServlet?url=#{usuario.caminhoDaImagem}" rendered="#{usuario.caminhoDaImagem != null}" width="30%" height="30%" />
 				</h:column>
 				<h:column>
 					<f:facet name="header">Nome</f:facet>

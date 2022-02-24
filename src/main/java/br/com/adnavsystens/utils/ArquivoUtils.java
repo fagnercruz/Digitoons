@@ -66,10 +66,10 @@ public abstract class ArquivoUtils {
 
 			} else {
 				// aborta o processo
-				return null;
+				throw new Exception("Arquivo ou nome do arquivo nulos");
 			}
 		}
-		return null;
+		throw new Exception("Falha ao tentar criar diretórios de destino");
 	}
 
 	private static boolean criaDiretorios(File f, StringBuilder caminho) {
@@ -108,9 +108,9 @@ public abstract class ArquivoUtils {
 		String[] arqName = nomeArquivo.split("\\.");
 		
 		// TODO analisar se esse trecho abaixo é necessário pois já existe essa mesma validação dentro de verificaNomeDoArquivo()
-		if(arqName.length > 2) {
-			throw new Exception("O nome do arquivo é inválido: Dois ou mais '.'");
-		}
+//		if(arqName.length > 2) {
+//			throw new Exception("O nome do arquivo é inválido: Dois ou mais '.'");
+//		}
 		
 		//limpa possiveis renomeações anteriores para atualizar novamente
 		if(arqName.length == 2) {
@@ -128,8 +128,12 @@ public abstract class ArquivoUtils {
 	}
 	
 	public static boolean excluirArquivo(String path) {
-		// TODO criar rotina para exclusão de arquivos.
-		
+		File f = new File(path);
+		if(f.exists()) {
+			if(f.delete()) {
+				return true;
+			}
+		}
 		return false;
 	}
 }
