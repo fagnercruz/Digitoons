@@ -9,10 +9,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
+import org.apache.catalina.core.ApplicationPart;
+
 import br.com.adnavsystens.connection.GenericDAO;
+import br.com.adnavsystens.enuns.FilePaths;
 import br.com.adnavsystens.models.Usuario;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
+import br.com.adnavsystens.utils.ArquivoUtils;
 import br.com.adnavsystens.utils.MensagensUtils;
 
 
@@ -24,6 +28,7 @@ public class GrupoMBean {
 	private Grupo grupo = new Grupo();
 	private GenericDAO<Grupo> daoGrupo = new GenericDAO<Grupo>();
 	private List<Grupo> grupos = new ArrayList<Grupo>();
+	private ApplicationPart imagemGrupo;
 	
 	/* Atribui ao usuário da sessão a propriedade do grupo criado */
 	private Usuario usuarioLogado = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
@@ -33,22 +38,51 @@ public class GrupoMBean {
 		
 	public String salvar() {
 		grupo.setCriadorResponsavel(usuarioLogado);
-		String msg = "";
-		try {
-			if(grupo.getId() != null) {
-				msg = "O grupo " + grupo.getNome() + " foi atualizado com sucesso";
-			}else {
-				msg = "O grupo " + grupo.getNome() + " foi salvo com sucesso";
+
+		//teste se for um novo cadastro ou update
+		if(grupo.getId() == null) {
+			//cadastro
+			try {
+				grupo.setImagemLogo(ArquivoUtils.salvarArquivo(imagemGrupo, FilePaths.GRUPO));
+				daoGrupo.salvar(grupo);
+				MensagensUtils.addMensagemSucesso("Sucesso", "Grupo salvo");
+			} catch (Exception e) {
+				MensagensUtils.addMensagemErro("Erro", e.getLocalizedMessage());
 			}
-			daoGrupo.salvar(grupo);
-			grupo = new Grupo();
-			listarGruposUsuarioLogado();
-			MensagensUtils.addMensagemSucesso("Sucesso", msg);
-		} catch (Exception e) {
-			MensagensUtils.addMensagemErro("Erro", "Não foi possível salvar: " + e.getLocalizedMessage());
-			e.printStackTrace();
+		} else {
+			// update
+			// verifica se tem upload de arquivo
+			if(imagemGrupo != null) {
+				//se TEM ARQUIVO UPADO, verifica se ja existe antes para remover e adiciona a nova
+				Grupo aux = new Grupo();
+				aux.setId(grupo.getId());
+				aux = daoGrupo.pesquisar(aux);
+				if(aux.getImagemLogo() != null) {
+					ArquivoUtils.excluirArquivo(aux.getImagemLogo());
+				}
+				try {
+					grupo.setImagemLogo(ArquivoUtils.salvarArquivo(imagemGrupo, FilePaths.GRUPO));
+					daoGrupo.salvar(grupo);
+					MensagensUtils.addMensagemSucesso("Sucesso", "Os dados foram atualizados.");
+				} catch (Exception e) {
+					MensagensUtils.addMensagemErro("Erro", e.getLocalizedMessage());
+				}
+			} else {
+				// se NAO TEM ARQUIVO UPADO, resgasta a imagem ja existente para não perder a referencia dela
+				Grupo aux = new Grupo();
+				aux.setId(grupo.getId());
+				aux = daoGrupo.pesquisar(aux);
+				grupo.setImagemLogo(aux.getImagemLogo());
+				try {
+					daoGrupo.salvar(grupo);
+					MensagensUtils.addMensagemSucesso("Sucesso", "Os dados foram atualizados.");
+				} catch (Exception e) {
+					MensagensUtils.addMensagemErro("Erro", e.getLocalizedMessage());
+				}
+			}
 		}
-		
+		grupo = new Grupo();
+		listarGruposUsuarioLogado();
 		return "";
 	}
 
@@ -70,6 +104,10 @@ public class GrupoMBean {
 	public String excluirGrupo() {
 		Grupo aux = new Grupo();
 		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
+		aux = daoGrupo.pesquisar(aux);
+		if(aux.getImagemLogo() != null) {
+			ArquivoUtils.excluirArquivo(aux.getImagemLogo());
+		}
 		aux = daoGrupo.excluir(aux);
 		if(aux != null) {
 			MensagensUtils.addMensagemAlerta("Atenção", "O grupo " + aux.getNome() +" foi excluído com sucesso");
@@ -89,7 +127,7 @@ public class GrupoMBean {
 			EntityManager manager = daoGrupo.getEntityManager();
 			
 			grupos = (List<Grupo>) manager
-					.createQuery("from Grupo g where g.criadorResponsavel = :idUsuario")
+					.createQuery("from Grupo g where g.criadorResponsavel = :idUsuario order by g.id asc")
 					.setParameter("idUsuario", usuarioLogado)
 					.getResultList();
 		}
@@ -137,5 +175,15 @@ public class GrupoMBean {
 	public void setIdGrupo(Long idGrupo) {
 		this.idGrupo = idGrupo;
 	}
+
+	public ApplicationPart getImagemGrupo() {
+		return imagemGrupo;
+	}
+
+	public void setImagemGrupo(ApplicationPart imagemGrupo) {
+		this.imagemGrupo = imagemGrupo;
+	}
+
+	
 
 }

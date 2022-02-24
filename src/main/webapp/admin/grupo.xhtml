@@ -39,7 +39,7 @@
 		</h:form>
 	<!-- /BARRA DE MENU -->
 
-	<h:form>
+	<h:form enctype="multipart/form-data">
 	
 		<f:metadata>
 			<f:event listener="#{grupoMBean.resetGrupoSessao}" type="preRenderView" />
@@ -57,7 +57,7 @@
 			<h:inputText id="slogan" value="#{grupoMBean.grupo.slogan}"  />
 			
 			<h:outputLabel for="imgLogo" value="Logomarca:" />
-			<h:inputText id="imgLogo" value="#{grupoMBean.grupo.imagemLogo}"  />
+			<h:inputFile id="imgLogo" value="#{grupoMBean.imagemGrupo}"  />
 				
 			<h:inputHidden id="idgrupo" value="#{grupoMBean.grupo.id}" />
 			<h:panelGroup>
@@ -70,6 +70,10 @@
 	
 	<h:dataTable var="grupo" value="#{grupoMBean.grupos}" id="grupoDataTable" styleClass="table table-hover mx-auto">
 		<f:facet name="header">Seus grupos</f:facet>
+		<h:column>
+			<f:facet name="header">Logo</f:facet>
+			<h:graphicImage width="30" height="30" value="/LoadImageServlet?url=#{grupo.imagemLogo}" rendered="#{grupo.imagemLogo != null}" />
+		</h:column>
 		<h:column>
 			<f:facet name="header">Nome</f:facet>
 			#{grupo.nome}

@@ -50,10 +50,13 @@
 	<br/>
 	
 		<h:panelGrid>
+			
+				<h:graphicImage width="30" height="30" value="/LoadImageServlet?url=#{grupoMBean.grupo.imagemLogo}" rendered="#{grupoMBean.grupo.imagemLogo != null}" />
+			
 			<h:panelGroup>
 				<span style="font-size: 24pt;">Grupo: <h:outputLabel id="labelGrupo" value="#{grupoMBean.grupo.nome}" style="color: blue;"/></span>
 			</h:panelGroup>
-		<h:outputText id="slogan" value="#{grupoMBean.grupo.slogan}" style="font-style: italic; "/>
+			<h:outputText id="slogan" value="#{grupoMBean.grupo.slogan}" style="font-style: italic; "/>
 		</h:panelGrid>
 		
 	<br />

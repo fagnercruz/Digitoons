@@ -136,4 +136,6 @@ public abstract class ArquivoUtils {
 		}
 		return false;
 	}
+	
+	//TODO Criar método de redimensionar imagem e de salvar tamanhos diferentes de imagens
 }
