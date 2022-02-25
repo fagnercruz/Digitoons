@@ -66,12 +66,13 @@ public abstract class ArquivoUtils {
 
 			} else {
 				// aborta o processo
-				throw new Exception("Arquivo ou nome do arquivo nulos");
+				throw new Exception("O arquivo ou seu nome são inválidos no sistema.");
 			}
 		}
 		throw new Exception("Falha ao tentar criar diretórios de destino");
 	}
 
+		
 	private static boolean criaDiretorios(File f, StringBuilder caminho) {
 		if (!f.exists()) {
 			try {

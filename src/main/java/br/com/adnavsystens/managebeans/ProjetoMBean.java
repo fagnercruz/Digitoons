@@ -9,11 +9,15 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 
+import org.apache.catalina.core.ApplicationPart;
+
 import br.com.adnavsystens.connection.GenericDAO;
+import br.com.adnavsystens.enuns.FilePaths;
 import br.com.adnavsystens.enuns.Status;
 import br.com.adnavsystens.models.projeto.Capitulo;
 import br.com.adnavsystens.models.projeto.Grupo;
 import br.com.adnavsystens.models.projeto.Projeto;
+import br.com.adnavsystens.utils.ArquivoUtils;
 import br.com.adnavsystens.utils.MensagensUtils;
 
 @ManagedBean
@@ -30,6 +34,8 @@ public class ProjetoMBean {
 	private Long idProjeto;
 	private Long idGrupo;
 	private List<Projeto> listaProjetos = new ArrayList<>();
+	private ApplicationPart imgCapa;
+	private ApplicationPart imgBanner;
 		
 	private void initProjeto() {
 		projeto = new Projeto();
@@ -58,11 +64,22 @@ public class ProjetoMBean {
 		Projeto aux = new Projeto();
 		Grupo auxGrupo = new Grupo();
 		
+		// foi optado por fazer uma consulta sql pois o hibernate não devolvia os dados do objeto atualizados
 		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
-		aux = daoProjeto.pesquisar(aux);
+		aux = daoProjeto.pesquisarSQL(aux);
+
 		
 		auxGrupo.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
 		auxGrupo = daoGrupo.pesquisar(auxGrupo);
+		
+		//remove as imagens do projeto
+		if(!ArquivoUtils.excluirArquivo(aux.getImagemBanner())) {
+			System.out.println("Banner não encontrado: " + aux.getImagemBanner());
+		}
+		if(!ArquivoUtils.excluirArquivo(aux.getImagemCapa())) {
+			System.out.println("Capa não encontrada: " + aux.getImagemCapa());
+		}
+		
 		
 		// remove o projeto da lista e atualiza o pai para a remoção acontecer em cascata
 		if(auxGrupo.getProjetos().remove(aux)) {
@@ -87,18 +104,65 @@ public class ProjetoMBean {
 		if(projeto.getId() == null) { 
 			projeto.setGrupo(grupo);
 			projeto.setStatus(Status.CRIADO);
+			try {
+				if(imgCapa != null && imgBanner != null) {
+					projeto.setImagemCapa(ArquivoUtils.salvarArquivo(imgCapa, FilePaths.PROJETO));
+					projeto.setImagemBanner(ArquivoUtils.salvarArquivo(imgBanner, FilePaths.PROJETO));
+				} else {
+					MensagensUtils.addMensagemErro("Erro", "Arquivo inválido");
+					return "";
+				}
+				
+			} catch (Exception e) {
+				MensagensUtils.addMensagemErro("Erro", "Não foi possível salvar: " + e.getLocalizedMessage());
+			}
 			projeto.setCapitulos(new ArrayList<Capitulo>()); // <-- prevenindo NPE quando cria o projeto e na exibição chama o getQtdeCapitulos
 		} else {
+			//verifica se tem upload e tbm se já não tem arquivos no registro a ser atualizado
+			Projeto auxProjeto = new Projeto();
+			auxProjeto.setId(projeto.getId());
+			auxProjeto = daoProjeto.pesquisar(auxProjeto);
+			
+			if(imgCapa == null) {
+				projeto.setImagemCapa(auxProjeto.getImagemCapa());
+			} else {
+				if(auxProjeto.getImagemCapa() != null) {
+					ArquivoUtils.excluirArquivo(auxProjeto.getImagemCapa());
+				}
+				try {
+					projeto.setImagemCapa(ArquivoUtils.salvarArquivo(imgCapa, FilePaths.PROJETO));
+				} catch (Exception e) {
+					MensagensUtils.addMensagemErro("Erro", "Não foi possível salvar o arquivo:" + e.getLocalizedMessage());
+				}
+			}
+			
+			if(imgBanner == null) {
+				projeto.setImagemBanner(auxProjeto.getImagemBanner());
+			} else {
+				if(auxProjeto.getImagemBanner() != null) {
+					ArquivoUtils.excluirArquivo(auxProjeto.getImagemBanner());
+				}
+				try {
+					projeto.setImagemBanner(ArquivoUtils.salvarArquivo(imgBanner, FilePaths.PROJETO));
+				} catch (Exception e) {
+					MensagensUtils.addMensagemErro("Erro", "Não foi possível salvar o arquivo:" + e.getLocalizedMessage());
+				}
+			}
+			
 			projeto.setGrupo(grupo);
 			projeto.setCapitulos(listarCapitulosDoProjeto(projeto.getId()));
 		}
 		
 		try {
 			daoProjeto.salvar(projeto);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sucesso!", "Projeto salvo"));
+			if(projeto.getId() == null) {
+				MensagensUtils.addMensagemSucesso("Sucesso", "Projeto salvo");
+			}else {
+				MensagensUtils.addMensagemSucesso("Sucesso", projeto.getTitulo() + " foi atualizado com sucesso.");
+			}
 			initProjeto();
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Falha!", "Não foi possível salvar: " + e.getLocalizedMessage()));
+			MensagensUtils.addMensagemErro("Falha", "Não foi possível salvar: " + e.getLocalizedMessage());
 		}
 		return "";
 	}
@@ -135,6 +199,9 @@ public class ProjetoMBean {
 		daoProjeto.excluir(projeto);
 	}
 	
+	
+	
+	
 	public Projeto getProjeto() {
 		return projeto;
 	}
@@ -170,6 +237,22 @@ public class ProjetoMBean {
 
 	public void setListaProjetos(List<Projeto> listaProjetos) {
 		this.listaProjetos = listaProjetos;
+	}
+
+	public ApplicationPart getImgCapa() {
+		return imgCapa;
+	}
+
+	public void setImgCapa(ApplicationPart imgCapa) {
+		this.imgCapa = imgCapa;
+	}
+
+	public ApplicationPart getImgBanner() {
+		return imgBanner;
+	}
+
+	public void setImgBanner(ApplicationPart imgBanner) {
+		this.imgBanner = imgBanner;
 	}
 
 }

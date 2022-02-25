@@ -5,8 +5,8 @@ public enum FilePaths {
 	ROOT_PATH("C:\\digitoons\\"),
 	USUARIO("files\\user\\"),
 	GRUPO("files\\grupo\\"),
-	PROJETO("files\\projetos"),
-	CAPITULO("files\\capitulos");
+	PROJETO("files\\projetos\\"),
+	CAPITULO("files\\capitulos\\");
 	
 	private String caminho;
 	

@@ -36,6 +36,17 @@ public class GenericDAO<E> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public E pesquisarSQL(E entity) {
+		Object id = HibernateUtils.getPK(entity);
+		if(!manager.getTransaction().isActive()) {
+			manager.getTransaction().begin();
+		}
+		E e = (E) manager.createQuery("from " + entity.getClass().getSimpleName() + " where id = " + id.toString()).getSingleResult();
+		manager.getTransaction().commit();
+		return e;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<E> pesquisarTodos(Class<E> entityClass) {
 		if(!manager.getTransaction().isActive()) {
 			manager.getTransaction().begin();
@@ -77,7 +88,5 @@ public class GenericDAO<E> {
 	public static boolean isTransacaoAtiva() {
 		return manager.getTransaction().isActive();
 	}
-	
-	
 	
 }

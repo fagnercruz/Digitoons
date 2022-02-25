@@ -45,7 +45,7 @@
 		</h:form>
 	<!-- /BARRA DE MENU -->
 	
-	<p:messages showDetail="true" />
+	<p:messages showDetail="true" showIcon="false" showSummary="true" />
 
 	<br/>
 	
@@ -61,26 +61,26 @@
 		
 	<br />
 
-	<h:form id="cadProjeto">
+	<h:form id="cadProjeto" enctype="multipart/form-data">
 		<h:panelGrid columns="2">
 			<f:facet name="header">Novo projeto</f:facet>
 			<h:outputLabel for="titulo" value="Título:" />
-			<h:inputText id="titulo" value="#{projetoMBean.projeto.titulo}" />
+			<h:inputText id="titulo" value="#{projetoMBean.projeto.titulo}" autocomplete="off" />
 
 			<h:outputLabel for="resumo" value="Resumo: " />
-			<h:inputText id="resumo" value="#{projetoMBean.projeto.resumo}" />
+			<h:inputText id="resumo" value="#{projetoMBean.projeto.resumo}" autocomplete="off"/>
 
 			<h:outputLabel for="descricao" value="Descrição: " />
-			<h:inputText id="descricao" value="#{projetoMBean.projeto.descricao}" />
+			<h:inputText id="descricao" value="#{projetoMBean.projeto.descricao}" autocomplete="off"/>
 
 			<h:outputLabel for="autor" value="Autor:  " />
-			<h:inputText id="autor" value="#{projetoMBean.projeto.autor}" />
+			<h:inputText id="autor" value="#{projetoMBean.projeto.autor}" autocomplete="off"/>
 
 			<h:outputLabel for="imgCapa" value="Capa: " />
-			<h:inputText id="imgCapa" value="#{projetoMBean.projeto.imagemCapa}" />
+			<h:inputFile id="imgCapa" value="#{projetoMBean.imgCapa}" />
 
 			<h:outputLabel for="imgBanner" value="Banner:  " />
-			<h:inputText id="imgBanner" value="#{projetoMBean.projeto.imagemBanner}" />
+			<h:inputFile id="imgBanner" value="#{projetoMBean.imgBanner}" />
 
 			<!-- campos preenchidos quando é edição -->
 			<h:inputHidden id="idProjeto" value="#{projetoMBean.projeto.id}" />
