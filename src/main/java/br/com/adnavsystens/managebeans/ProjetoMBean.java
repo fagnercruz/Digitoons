@@ -64,20 +64,22 @@ public class ProjetoMBean {
 		Projeto aux = new Projeto();
 		Grupo auxGrupo = new Grupo();
 		
-		// foi optado por fazer uma consulta sql pois o hibernate não devolvia os dados do objeto atualizados
 		aux.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idProjeto")));
-		aux = daoProjeto.pesquisarSQL(aux);
-
+		aux = daoProjeto.pesquisar(aux);
 		
 		auxGrupo.setId(Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("idGrupo")));
 		auxGrupo = daoGrupo.pesquisar(auxGrupo);
 		
 		//remove as imagens do projeto
-		if(!ArquivoUtils.excluirArquivo(aux.getImagemBanner())) {
-			System.out.println("Banner não encontrado: " + aux.getImagemBanner());
+		if(aux.getImagemBanner() != null) {
+			if(!ArquivoUtils.excluirArquivo(aux.getImagemBanner())) {
+				System.out.println("Banner não encontrado: " + aux.getImagemBanner());
+			}
 		}
-		if(!ArquivoUtils.excluirArquivo(aux.getImagemCapa())) {
-			System.out.println("Capa não encontrada: " + aux.getImagemCapa());
+		if(aux.getImagemCapa() != null) {
+			if(!ArquivoUtils.excluirArquivo(aux.getImagemCapa())) {
+				System.out.println("Capa não encontrada: " + aux.getImagemCapa());
+			}
 		}
 		
 		
@@ -121,7 +123,7 @@ public class ProjetoMBean {
 			//verifica se tem upload e tbm se já não tem arquivos no registro a ser atualizado
 			Projeto auxProjeto = new Projeto();
 			auxProjeto.setId(projeto.getId());
-			auxProjeto = daoProjeto.pesquisar(auxProjeto);
+			auxProjeto = daoProjeto.pesquisarSQL(auxProjeto);
 			
 			if(imgCapa == null) {
 				projeto.setImagemCapa(auxProjeto.getImagemCapa());
