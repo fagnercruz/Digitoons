@@ -73,6 +73,7 @@
 		<h:column>
 			<f:facet name="header">Logo</f:facet>
 			<h:graphicImage width="30" height="30" value="/LoadImageServlet?url=#{grupo.imagemLogo}" rendered="#{grupo.imagemLogo != null}" />
+			<h:graphicImage width="30" height="30" library="img" name="not-disponible.png" rendered="#{grupo.imagemLogo == null}" />
 		</h:column>
 		<h:column>
 			<f:facet name="header">Nome</f:facet>
