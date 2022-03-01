@@ -47,47 +47,53 @@
 	<!-- /BARRA DE MENU -->
 	
 	<p:messages showDetail="true" />
-
-	<h:form>
-		<h2><h:outputText value="#{projetoMBean.projeto.titulo}" /> </h2>
+	<h:graphicImage width="100%" height="100" value="/LoadImageServlet?url=#{projetoMBean.projeto.imagemBanner}" rendered="#{projetoMBean.projeto.imagemCapa != null}" />
+	<h:graphicImage width="100%" height="100" library="img" name="not-disponible.png" rendered="#{projetoMBean.projeto.imagemCapa == null}" />
+	<h:panelGrid columns="2">
+		<h:panelGroup id="capa">
+			<h:graphicImage width="230" height="320" value="/LoadImageServlet?url=#{projetoMBean.projeto.imagemCapa}" rendered="#{projetoMBean.projeto.imagemCapa != null}" />
+			<h:graphicImage width="30" height="30" library="img" name="not-disponible.png" rendered="#{projetoMBean.projeto.imagemCapa == null}" />
+		</h:panelGroup>
+		<h:panelGroup id="detalhes">
+			<h:form>
+				<h2><h:outputText value="#{projetoMBean.projeto.titulo}" /> </h2>
+				
+				<h:panelGrid id="dt" columns="2">
+					<h:outputText value="Autor: " style="font-weight: bold;" />
+					<h:outputText value="#{projetoMBean.projeto.autor}" />
+					
+					<h:outputText value="Grupo:  " style="font-weight: bold;" />
+					<h:outputText id="publisher" value="#{projetoMBean.projeto.grupo}" />
+					
+					<h:outputText value="Resumo: " style="font-weight: bold;" />
+					<h:outputText id="resumo" value="#{projetoMBean.projeto.resumo}" />
+					
+					<h:outputText value="Status: " style="font-weight: bold;" />
+					<h:outputText id="status" value="#{projetoMBean.projeto.status.descricao}" />
+					
+				</h:panelGrid>
+				<br/>
+				<h:panelGrid id="fom_add" columns="2">
+					<f:facet name="header">Add capítulo</f:facet>
+					
+					<h:outputLabel for="numero" value="Nº:" />
+					<h:inputText id="numero" value="#{capituloMBean.capitulo.numero}" />
 		
-		<h:panelGrid columns="2">
-			<h:outputText value="Autor: " style="font-weight: bold;" />
-			<h:outputText value="#{projetoMBean.projeto.autor}" />
-			
-			<h:outputText value="Grupo:  " style="font-weight: bold;" />
-			<h:outputText id="publisher" value="#{projetoMBean.projeto.grupo}" />
-			
-			<h:outputText value="Resumo: " style="font-weight: bold;" />
-			<h:outputText id="resumo" value="#{projetoMBean.projeto.resumo}" />
-			
-			<h:outputText value="Status: " style="font-weight: bold;" />
-			<h:outputText id="status" value="#{projetoMBean.projeto.status.descricao}" />
-			
-		</h:panelGrid>
-	
-	</h:form>
-	
-	<br />
-	<h:form>
-		<h:panelGrid columns="2">
-			<f:facet name="header">Add capítulo</f:facet>
-			
-			<h:outputLabel for="numero" value="Nº:" />
-			<h:inputText id="numero" value="#{capituloMBean.capitulo.numero}" />
+					<h:outputLabel for="titulo" />
+					<h:inputText id="titulo" value="#{capituloMBean.capitulo.titulo}" />
+					
+					<h:inputHidden id="id" value="#{capituloMBean.capitulo.id}" />
+					
+					<h:outputLabel value="" />
+					<h:commandButton value="Adicionar" action="#{capituloMBean.salvar}" >
+						<f:param value="#{projetoMBean.projeto.id}" id="idProjeto" name="idProjeto" />
+					</h:commandButton>
+				</h:panelGrid>
+			</h:form>
+		</h:panelGroup>
+	</h:panelGrid>
 
-			<h:outputLabel for="titulo" />
-			<h:inputText id="titulo" value="#{capituloMBean.capitulo.titulo}" />
-			
-			<h:inputHidden id="id" value="#{capituloMBean.capitulo.id}" />
-			
-			<h:outputLabel value="" />
-			<h:commandButton value="Adicionar" action="#{capituloMBean.salvar}" >
-				<f:param value="#{projetoMBean.projeto.id}" id="idProjeto" name="idProjeto" />
-			</h:commandButton>
-		</h:panelGrid>
-		
-	</h:form>
+	
 	
 	
 	<br/>
